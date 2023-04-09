@@ -1,0 +1,20 @@
+{
+    "user_name": "Nutzername",
+    "password": "Passwort",
+    "retype_password": "erneut eingeben",
+    "register": "registrieren",
+    "login": "einloggen",
+    "create_folder": "Ordner erstellen",
+    "upload_file": "Datei hochladen",
+    "delete": "löschen",
+    "copy": "kopieren",
+    "move": "verschieben",
+    "zip": "ZIP-Datei packen",
+    "go": "los",
+    "action_on_element": "Aktion auf ausgewählte Elemente",
+    "select_all": "alle auswählen",
+    "upload": "hochladen",
+    "noname": "kein Name verfügbar",
+    "nodate": "kein Datum verfügbar",
+    "nosize": "keine Größe verfügbar"
+}

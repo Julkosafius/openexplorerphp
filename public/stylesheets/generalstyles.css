@@ -1,0 +1,76 @@
+:root {
+    --bgColor: black;
+    --blank: #414547;
+    --darkgreen: #346410;
+    --darkgrey: #18181a;
+    --darkyellow: #695a18;
+    --green: #6ecf22;
+    --red: #bc382d;
+    --round-corners: 0.5em;
+    --textColor: white;
+    --yellow: #d8b833;
+}
+
+.successful {
+    color: var(--green);
+}
+
+.error {
+    color: #bc382d;
+}
+
+body {
+    overflow-y: scroll;
+}
+
+table, td, th {
+    border: solid var(--blank) 0.1em;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+#download_frame {
+    display: none;
+}
+
+.folderBtn {
+    background-color: #d8b833;
+}
+
+.fileBtn {
+    background-color: white;
+}
+
+#optionWindow {
+    border-radius: var(--round-corners);
+    position: absolute;
+    z-index: 9;
+    background-color: #f1f1f1;
+    border: 1px solid #d3d3d3;
+    text-align: center;
+    display: none;
+    margin: auto;
+}
+  
+#optionWindowHeader {
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+    background-color: transparent;
+    color: var(--darkgrey);
+}
+
+#tree_view .selected {
+    background-color: red;
+    color: blue;
+}
+
+li span {
+    background-color: green;
+}
+
+#optionWindowContent {
+    text-align: left;
+}
