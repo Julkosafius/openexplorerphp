@@ -1,12 +1,8 @@
 <?php
-require 'vendor/autoload.php';
 require 'app/globals.php';
 require 'app/utilities.php';
 
-use App\SQLiteConnection as SQLiteConnection;
-use App\SQLiteUtilities as SQLiteUtilities;
-
-$sqlite = new SQLiteUtilities((new SQLiteConnection())->connect());
+global $sqlite; // inherits database connection from utilities
 
 $all_files_to_delete = [];
 $all_folders_to_delete = [];

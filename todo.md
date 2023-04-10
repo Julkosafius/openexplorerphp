@@ -1,6 +1,6 @@
 - vendor app autoload und app import bei 'utility.php' importeuren entfernen
 
-- ordnerinhalte alphabetisch sortieren
+- ordnerinhalte alphabetisch sortieren lassen (allg. Sortieroption implementieren als parameter für getFolderContents)
 
 - sicherheitsabfrage ("wirklich löschen?")
 
