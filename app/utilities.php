@@ -65,8 +65,10 @@ function updateFolderSize($folder_id, $size, $operation = '+') {
             }
 
         } elseif ($operation == '-') { // subtract
+
             $new_folder_size = $current_folder_size - $size;
             if ($new_folder_size < 0) $new_folder_size = 0;
+            
         }
 
         $sqlite->executeCommands('update folders set folder_size = '.$new_folder_size.' where rowid = '.$current_folder_id);
@@ -121,6 +123,24 @@ function isPropertyOfUser($id, $table) {
     }
 }
 
+function getInfo($id, $table) {
+    global $sqlite;
+    switch ($table) {
+        case 'folder':
+        case 'folders':
+            return $sqlite->getIterator('select * from folders where rowid = '.$id)->fetch();
+            break;
+
+        case 'file':
+        case 'files':
+            return $sqlite->getIterator('select * from files where rowid = '.$id)->fetch();
+            break;
+        
+        default:
+            return [];
+            break;
+    }
+}
 
 function fileWasCopied($file_id) {#
     global $sqlite;
@@ -133,7 +153,7 @@ function getFolderContents($folder_id) {
     $curr_folder_info = $sqlite->getIterator('select parent_folder_id, folder_name from folders where rowid = "'.$folder_id.'"')->fetch(PDO::FETCH_ASSOC);
     $curr_folder_parent_id = $curr_folder_info['parent_folder_id'];
     $curr_folder_name = $curr_folder_info['folder_name'];
-    $folders_iterator = $sqlite->getIterator('select rowid, folder_name, folder_time, folder_size from folders where parent_folder_id = "'.$folder_id.'"');
+    $folders_iterator = $sqlite->getIterator('select rowid, folder_name, folder_time, folder_size, parent_folder_id from folders where parent_folder_id = "'.$folder_id.'"');
     $files_iterator = $sqlite->getIterator('select rowid, file_name, file_time, file_size, file_type, file_hash from files where folder_id = "'.$folder_id.'"');
     $folders = [];
     $files = [];
@@ -142,7 +162,8 @@ function getFolderContents($folder_id) {
             'folder_id' => $row['rowid'],
             'folder_name' => escape($row['folder_name']),
             'folder_time' => escape($row['folder_time']),
-            'folder_size' => escape($row['folder_size'])
+            'folder_size' => escape($row['folder_size']),
+            'parent_folder_id' => $row['parent_folder_id']
         ];
     }
     while ($row = $files_iterator->fetch(PDO::FETCH_ASSOC)) {

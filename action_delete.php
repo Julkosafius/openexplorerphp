@@ -21,7 +21,7 @@ unset($files['.']);
 
 function deleteFile($file_id, $physicalDelete = true) {
     global $sqlite, $files, $status_array;
-    $file_info = $sqlite->getIterator('select file_name, file_hash, file_type, file_size, folder_id from files where rowid = "'.$file_id.'"')->fetch();
+    $file_info = getInfo($file_id, 'files');
     $file_name = $file_info['file_name'];
     $file_hash = $file_info['file_hash'];
     $file_type = $file_info['file_type'];
@@ -52,13 +52,13 @@ function deleteFolder($folder_id) {
 
 // get all files and folders to be deleted
 
-if (!empty($_POST['file'])) {
-    $all_files_to_delete = $_POST['file'];
+if (!empty($_POST['files'])) {
+    $all_files_to_delete = $_POST['files'];
 }
 
-if (!empty($_POST['folder'])) {
-    $all_folders_to_delete = $_POST['folder'];
-    foreach ($_POST['folder'] as $folder_id) {
+if (!empty($_POST['folders'])) {
+    $all_folders_to_delete = $_POST['folders'];
+    foreach ($_POST['folders'] as $folder_id) {
         $found_elements = traverseTree($folder_id);
         // array_merge does not work ...
         // experimental:

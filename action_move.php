@@ -7,8 +7,8 @@ global $sqlite; // inherits database connection from utilities
 $status_array = [];
 
 $destination = isset($_POST['destination']) ? $_POST['destination'] : null;
-$files = isset($_POST['file']) ? $_POST['file'] : null;
-$folders = isset($_POST['folder']) ? $_POST['folder'] : null;
+$files = isset($_POST['files']) ? $_POST['files'] : null;
+$folders = isset($_POST['folders']) ? $_POST['folders'] : null;
 
 if (!$destination) {
     $status_array[] = 'No destination folder found.';
@@ -25,7 +25,7 @@ if (!empty($folders)) {
         } elseif (!isPropertyOfUser($folder_id, 'folders')) {
             $status_array[] = 'Could not move '.$folder_id.': no permission.';
         } else {
-            $folder_info = $sqlite->getIterator('select folder_name, folder_size, parent_folder_id from folders where rowid = '.$folder_id)->fetch();
+            $folder_info = getInfo($folder_id, 'folders');
             $folder_name = $folder_info['folder_name'];
             $folder_size = $folder_info['folder_size'];
             $old_parent_folder = $folder_info['parent_folder_id'];

@@ -132,7 +132,7 @@ function renderFolderContents(curr_folder_contents_json) {
         
         let checkbox_input = document.createElement("input");
         checkbox_input.type = "checkbox";
-        checkbox_input.name = "folder";
+        checkbox_input.name = "folders";
         checkbox_input.value = folder.folder_id;
         folderDiv.appendChild(checkbox_input);
 
@@ -167,7 +167,7 @@ function renderFolderContents(curr_folder_contents_json) {
 
         let checkbox_input = document.createElement("input");
         checkbox_input.type = "checkbox";
-        checkbox_input.name = "file";
+        checkbox_input.name = "files";
         checkbox_input.value = file.file_id;
         file_div.appendChild(checkbox_input);
 

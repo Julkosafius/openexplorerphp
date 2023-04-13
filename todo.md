@@ -1,3 +1,6 @@
+- copy implementieren!
+  - status_array implementieren
+
 - ordnerinhalte alphabetisch sortieren lassen (allg. Sortieroption implementieren als parameter für getFolderContents)
 
 - leute, die javascript blockiert haben vom verwenden der seite hindern    noscript
@@ -12,7 +15,7 @@
 
 - utilities.php in logischere Unterteile aufteilen
 
-- copy implementieren!
+- getFileInfo und getFolderInfo implementieren, die je einen Array mit allen Attributen für eine file_ oder folder_id zurückgeben
 
 - in order select menü: auswahl von root hinzufügen.
 
