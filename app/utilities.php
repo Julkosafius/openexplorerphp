@@ -18,7 +18,7 @@ function redirect($url, $statusCode = 303) {
     die();
 }
 
-if(!function_exists('str_contains')) {
+if (!function_exists('str_contains')) {
     function str_contains($haystack, $needle) {
         return $needle !== '' && mb_strpos($haystack, $needle) !== false;
     }
@@ -164,11 +164,10 @@ function getFolderContents($folder_id) {
 }
 
 /**
- * Recursive function traversing the file tree of a given folder id.
- * It uses the global arrays $directory_list and $file_list as output.
- * If a directory has in total n subdirectories, the function submits in total n+1 * 3 database requests (see getFolderContents for *3).
+ * Recursive function traversing the file tree inside a given folder (id).
+ * If a folder has n subfolders, the function submits in total n+1 * 3 database requests (see getFolderContents for *3).
  * @param int $folder_id A valid folder id.
- * @returns array An array of two arrays: one with all found directory IDs, the other with all found file IDs.
+ * @returns array An array of two arrays: one with all found folder IDs, the other with all found file IDs.
  */
 function traverseTree($folder_id) {
     $folder_contents = getFolderContents($folder_id);
@@ -179,9 +178,9 @@ function traverseTree($folder_id) {
         for ($i = 0; $i < count($elements); $i++) {
             if (isset($elements[$i]['folder_id'])) {
                 $folder_list[] = $elements[$i]['folder_id'];
-                $subdirectory_contents = traverseTree($elements[$i]['folder_id']);
-                $folder_list = array_merge($folder_list, $subdirectory_contents[0]);
-                $file_list = array_merge($file_list, $subdirectory_contents[1]);
+                $subfolder_contents = traverseTree($elements[$i]['folder_id']);
+                $folder_list = array_merge($folder_list, $subfolder_contents[0]);
+                $file_list = array_merge($file_list, $subfolder_contents[1]);
             } else {
                 $file_list[] = $elements[$i]['file_id'];
             }

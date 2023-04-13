@@ -1,12 +1,9 @@
 <?php
-date_default_timezone_set('UTC');
-
-require 'vendor/autoload.php';
-require 'app/utilities.php';
 require 'app/globals.php';
+require 'app/utilities.php';
 
-use App\SQLiteConnection as SQLiteConnection;
-use App\SQLiteUtilities as SQLiteUtilities;
+// imports default timezone from utilities
+global $sqlite; 
 
 function reorderFileArray($file_post) {
     $file_arr = array();

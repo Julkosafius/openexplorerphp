@@ -1,8 +1,4 @@
-- vendor app autoload und app import bei 'utility.php' importeuren entfernen
-
 - ordnerinhalte alphabetisch sortieren lassen (allg. Sortieroption implementieren als parameter für getFolderContents)
-
-- sicherheitsabfrage ("wirklich löschen?")
 
 - leute, die javascript blockiert haben vom verwenden der seite hindern    noscript
 

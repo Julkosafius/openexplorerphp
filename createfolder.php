@@ -1,12 +1,9 @@
 <?php
-date_default_timezone_set('UTC');
-
-require 'vendor/autoload.php';
-require 'app/utilities.php';
 require 'app/globals.php';
+require 'app/utilities.php';
 
-use App\SQLiteConnection as SQLiteConnection;
-use App\SQLiteUtilities as SQLiteUtilities;
+// imports default timezone from utilities
+global $sqlite;
 
 // get name of the folder being created
 $folder_name = $_POST['folder_name'];
@@ -19,7 +16,6 @@ if (strlen($folder_name) > MAX_FOLDER_NAME_LEN) {
 }
 
 // log to database
-$sqlite = new SQLiteUtilities((new SQLiteConnection())->connect());
 $out = 'insert into folders(user_id, folder_name, parent_folder_id, folder_time, folder_size) values ("'.$_COOKIE['user_id'].'", "'.$folder_name.'", "'.$folder_id.'", "'.$folder_time.'", 0)';
 $sqlite->executeCommands($out);
 

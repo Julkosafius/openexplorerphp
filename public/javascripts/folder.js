@@ -283,6 +283,7 @@ function renderResponseStatus(jsonResponse) {
         msgList.appendChild(li);
     }
     OPTION_WINDOW_CONTENT.appendChild(msgList);
+    return msgList;
 }
 
 // ******
@@ -379,7 +380,18 @@ async function executeAction(e) {
 
         switch (action) {
             case ACTIONS[0]: // remove
-                OPTION_WINDOW_TITLE.textContent = "Remove";
+                OPTION_WINDOW_TITLE.textContent = "Delete";
+
+                const DELETE_QUESTION_P = document.createElement("p");
+                const DELETE_BTN = document.createElement("button");
+                DELETE_QUESTION_P.textContent = "Do you really want to delete the selected element(s)?";
+                DELETE_BTN.textContent = "Delete";
+
+                OPTION_WINDOW_CONTENT.appendChild(DELETE_QUESTION_P);
+                OPTION_WINDOW_CONTENT.appendChild(DELETE_BTN);
+
+                // Wait for the button to be clicked
+                await new Promise(resolve => DELETE_BTN.addEventListener("click", resolve, { once: true }));
 
                 let remove_response = await fetch("action_delete.php", {
                     method: "POST",
@@ -395,10 +407,10 @@ async function executeAction(e) {
                 break;
             
             case ACTIONS[1]: // move
-                OPTION_WINDOW_TITLE.textContent = "Move";
+                OPTION_WINDOW_TITLE.textContent = "Move where?";
 
-                let destination = await selectDestinationFolder();
-                requestBody += `destination=${destination}`;
+                let move_destination = await selectDestinationFolder();
+                requestBody += `destination=${move_destination}`;
                 console.log(requestBody);
 
                 let move_response = await fetch("action_move.php", {
@@ -408,9 +420,29 @@ async function executeAction(e) {
                     },
                     body: requestBody
                 });
-                let move_response_content = await move_response.text();
+                let move_response_content = await move_response.json();
                 console.log(move_response_content);
                 renderResponseStatus(move_response_content);
+
+                break;
+
+            case ACTIONS[2]: // copy
+                OPTION_WINDOW_TITLE.textContent = "Copy to where?";
+
+                let copy_destination = await selectDestinationFolder();
+                requestBody += `destination=${copy_destination}`;
+                console.log(requestBody);
+
+                let copy_response = await fetch("action_copy.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                    },
+                    body: requestBody
+                });
+                let copy_response_content = await copy_response.text();
+                console.log(copy_response_content);
+                // renderResponseStatus(copy_response_content);
 
                 break;
 
