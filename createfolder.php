@@ -11,7 +11,7 @@ $folder_id = $_POST['curr_folder_id'];
 $folder_time = time();
 
 if (strlen($folder_name) > MAX_FOLDER_NAME_LEN) {
-    echo 1;
+    echo 'Folder name too long.';
     die();
 }
 
@@ -21,4 +21,4 @@ $sqlite->executeCommands('insert into folders(user_id, folder_name, parent_folde
 // check if folder was created successfully
 $folderExists = $sqlite->getFirstColumnValue('select count(*) as cnt from folders where user_id like "'.$_COOKIE['user_id'].'" and folder_name like "'.$folder_name.'" and parent_folder_id like "'.$folder_id.'" and folder_time like "'.$folder_time.'"', 'cnt');
 
-echo $folderExists > 0 ? 0 : 1;
+echo $folderExists > 0 ? 'The folder has been created successfully.' : 'Could not create folder.';

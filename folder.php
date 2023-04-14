@@ -25,7 +25,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 </head>
 <body>
 
-    <div id="optionWindow" class="nodisplay">
+    <div id="optionWindow" class="hide">
         <div id="optionWindowHeader">
             <span id="optionWindowTitle">Title</span>
             <button id="closeOptionWindow">X</button>

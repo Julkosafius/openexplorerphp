@@ -1,6 +1,3 @@
-- copy implementieren!
-  - status_array implementieren
-
 - ordnerinhalte alphabetisch sortieren lassen (allg. Sortieroption implementieren als parameter für getFolderContents)
 
 - leute, die javascript blockiert haben vom verwenden der seite hindern    noscript
@@ -15,10 +12,6 @@
 
 - utilities.php in logischere Unterteile aufteilen
 
-- getFileInfo und getFolderInfo implementieren, die je einen Array mit allen Attributen für eine file_ oder folder_id zurückgeben
-
-- in order select menü: auswahl von root hinzufügen.
-
 - tree.php löschen
 
 - UI sperren beim laden
@@ -27,9 +20,11 @@
 
 - statt requestBodyFromObject die neue URLSearchParams(obj).toString() verwenden zusammen mit urldecode() in PHP
 
-- ELEMENT_ACTION_DROPDOWN und ELEMENT_ACTION_BTN von disabled zu visibility: hidden (also Sichtbarkeitsmanagement über CSS) ändern?
+- lockUIElement soll buttons, fieldsets, inputs, optgroups, options, selects und textareas disablen (unlockUIElement wieder enablen)
 
 - php funktion für delete, move, ... die checkt, ob die übergebenen dateien und ordner überhaupt uns gehören
+
+- (await) getFolderContentsAJAX ?
 
 - daten verschlüsselt oder verfremdet speichern und nur mit korrekter ID entschlüsseln
   - enc.php Dateierweiterung nach iv auch speichern mit länge + erweiterung

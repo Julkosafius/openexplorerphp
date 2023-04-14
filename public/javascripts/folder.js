@@ -39,6 +39,35 @@ const disableActionDropdown = () => {
     if (ELEMENT_ACTION_BTN.hasAttribute("disabled")) ELEMENT_ACTION_BTN.removeAttribute("disabled");
 };
 
+const showOptionWindow = (title = "OptionWindow") => {
+    OPTION_WINDOW_CONTENT.innerHTML = "";
+    OPTION_WINDOW.classList.remove("hide");
+    OPTION_WINDOW.classList.add("show");
+    OPTION_WINDOW_TITLE.textContent = title;
+}
+const hideOptionWindow = () => {
+    OPTION_WINDOW.classList.remove("show");
+    OPTION_WINDOW.classList.add("hide");
+    OPTION_WINDOW_TITLE.textContent = "";
+}
+
+const lockUIElement = (element) => {
+    element.style.position = "relative";
+    const FILLING_DIV = document.createElement("div");
+    const LOADING_SVG = document.createElement("img");
+    FILLING_DIV.classList.add("lockUI");
+    LOADING_SVG.src = "public/images/loading.svg";
+    LOADING_SVG.alt = "Loading Symbol";
+    
+    FILLING_DIV.appendChild(LOADING_SVG);
+    element.insertBefore(FILLING_DIV, element.firstChild);
+}
+const unlockUIElement = (element) => {
+    if (element.firstChild.classList.contains("lockUI")) {
+        element.removeChild(element.firstChild);
+    }
+}
+
 function renderBreadcrumbs() {
     BREADCRUMBS.innerHTML = "";
 
@@ -234,8 +263,7 @@ function dragElement(el) {
 // ******
 
 async function addFile() {
-    OPTION_WINDOW.style.display = "block";
-    OPTION_WINDOW_TITLE.textContent = "Add a file";
+    showOptionWindow("Add a file");
 
     const rawHTMLResponse = await fetch("public/included_html/addFileForm.html", {
         method: "POST",
@@ -268,7 +296,6 @@ async function addFile() {
             });
             renderResponseStatus(await rawUploadResponse.json());
             
-            // update folder contents
             await getFolderContentsAJAX(curr_folder_id);
         }
     }
@@ -291,8 +318,7 @@ function renderResponseStatus(jsonResponse) {
 // ******
 
 async function addFolder() {
-    OPTION_WINDOW.style.display = "block";
-    OPTION_WINDOW_TITLE.textContent = "Create a folder";
+    showOptionWindow("Create a folder");
 
     // get text input from
     const rawResponse = await fetch("public/included_html/addFolderForm.html", {
@@ -322,19 +348,14 @@ async function createFolderAJAX(e) {
             body: `folder_name=${folder_name}&curr_folder_id=${curr_folder_id}`
         });
 
-        if (!Number.parseInt(await rawResponse.text())) {
-            OPTION_WINDOW_CONTENT.innerHTML = `<p>The folder has been created successfully.</p>`;
-        } else {
-            OPTION_WINDOW_CONTENT.innerHTML = `<p>Something went wrong.</p>`;
-        }
+        OPTION_WINDOW_CONTENT.innerHTML = await rawResponse.text();
 
         await getFolderContentsAJAX(curr_folder_id); // update contents of current folder
     }
 }
 
 function closeOptionWindow() {
-    OPTION_WINDOW.style.display = "none";
-    OPTION_WINDOW_CONTENT.innerHTML = "";
+    hideOptionWindow();
 }
 
 function selectAllElements() {
@@ -375,12 +396,9 @@ async function executeAction(e) {
 
         let requestBody = requestBodyFromObject(grouped_elements_json);
 
-        OPTION_WINDOW.style.display = "block";
-        OPTION_WINDOW_CONTENT.innerHTML = "";
-
         switch (action) {
             case ACTIONS[0]: // remove
-                OPTION_WINDOW_TITLE.textContent = "Delete";
+                showOptionWindow("Delete?");
 
                 const DELETE_QUESTION_P = document.createElement("p");
                 const DELETE_BTN = document.createElement("button");
@@ -407,7 +425,7 @@ async function executeAction(e) {
                 break;
             
             case ACTIONS[1]: // move
-                OPTION_WINDOW_TITLE.textContent = "Move where?";
+                showOptionWindow("Move where?");
 
                 let move_destination = await selectDestinationFolder();
                 requestBody += `destination=${move_destination}`;
@@ -427,7 +445,7 @@ async function executeAction(e) {
                 break;
 
             case ACTIONS[2]: // copy
-                OPTION_WINDOW_TITLE.textContent = "Copy to where?";
+                showOptionWindow("Copy to where?");
 
                 let copy_destination = await selectDestinationFolder();
                 requestBody += `destination=${copy_destination}`;

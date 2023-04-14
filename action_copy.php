@@ -4,14 +4,8 @@ require 'app/utilities.php';
 
 global $sqlite; // inherits database connection from utilities
 
-$status_array = [];
-
-$destination = isset($_POST['destination']) ? $_POST['destination'] : null;
-$files = isset($_POST['files']) ? $_POST['files'] : null;
-$folders = isset($_POST['folders']) ? $_POST['folders'] : null;
-
 function copyFile($file_id, $parent_folder_id = 0) {
-    global $sqlite, $destination, $status_array;
+    global $sqlite, $destination, $status_array, $destination_name;
     $file_info = getInfo($file_id, 'files');
     $folder_id = empty($parent_folder_id) ? $destination : $parent_folder_id;
     $sqlite->executeCommands('insert into files(file_name, file_type, file_size, file_time, file_hash, folder_id) '
@@ -23,7 +17,7 @@ function copyFile($file_id, $parent_folder_id = 0) {
                             .$file_info['file_hash'].'", '
                             .$folder_id
                             .')');
-    $status_array[] = 'Copied file '.$file_info['file_name'].'.'.$file_info['file_type'].'.';
+    $status_array[] = 'Copied file '.$file_info['file_name'].'.'.$file_info['file_type'].' to '.$destination_name.'.';
 }
 
 function copyFolder($folder_id, $last_folder_id = 0) {
@@ -61,6 +55,12 @@ function copyFolder($folder_id, $last_folder_id = 0) {
     }
 }
 
+$status_array = [];
+
+$destination = isset($_POST['destination']) ? $_POST['destination'] : null;
+$files = isset($_POST['files']) ? $_POST['files'] : null;
+$folders = isset($_POST['folders']) ? $_POST['folders'] : null;
+
 if (!$destination) {
     $status_array[] = 'No destination folder found.';
     echo json_encode($status_array);
@@ -81,6 +81,9 @@ if (!empty($folders)) {
                                 .$folder_info['folder_size']
                                 .')');
         $new_folder_id = $sqlite->getFirstColumnValue('select max(rowid) as id from folders where parent_folder_id ='.$destination, 'id');
+        
+        updateFolderSize($destination, $folder_info['folder_size'], '+');
+        
         // copy all contents of the original selected folder in his copy
         copyFolder($folder_id, $new_folder_id);
     }
