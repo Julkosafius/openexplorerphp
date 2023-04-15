@@ -1,3 +1,11 @@
+- zip implementieren
+  - bug, mit doppelten dateinamen, wenn dateien kopiert wurden
+  - addEmptyDir bug -> als zip stream implementieren
+
+- download implementieren
+
+- upload progress bar implementieren
+
 - ordnerinhalte alphabetisch sortieren lassen (allg. Sortieroption implementieren als parameter für getFolderContents)
 
 - leute, die javascript blockiert haben vom verwenden der seite hindern    noscript

@@ -28,11 +28,11 @@ function copyFolder($folder_id, $last_folder_id = 0) {
     if (!empty($elements)) {
         for ($i = 0; $i < count($elements); $i++) {
             if (isset($elements[$i]['folder_id'])) {
-                $folder_info = getInfo($elements[$i]['folder_id'], 'folders');
+                $folder_info = $elements[$i];
                 $parent_folder_id = empty($folder_info['parent_folder_id']) ? $destination : $last_folder_id;
                 // create a new folder with the same stats (updated timestamp)
                 $sqlite->executeCommands('insert into folders(user_id, folder_name, parent_folder_id, folder_time, folder_size) values ("'
-                                        .$folder_info['user_id'].'", "'
+                                        .$_COOKIE['user_id'].'", "'
                                         .$folder_info['folder_name'].'", '
                                         .$parent_folder_id.', '
                                         .time().', '
@@ -70,11 +70,11 @@ if (!$destination) {
 $destination_name = $sqlite->getFirstColumnValue('select folder_name as fn from folders where rowid = '.$destination, 'fn');
 
 if (!empty($folders)) {
-    foreach($folders as $folder_id) {
+    foreach ($folders as $folder_id) {
         // create a copy of the selected folder in the destination folder 
         $folder_info = getInfo($folder_id, 'folders');
         $sqlite->executeCommands('insert into folders(user_id, folder_name, parent_folder_id, folder_time, folder_size) values ("'
-                                .$folder_info['user_id'].'", "'
+                                .$_COOKIE['user_id'].'", "'
                                 .$folder_info['folder_name'].'", '
                                 .$destination.', '
                                 .time().', '

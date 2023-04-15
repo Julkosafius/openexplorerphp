@@ -460,9 +460,27 @@ async function executeAction(e) {
                 });
                 let copy_response_content = await copy_response.text();
                 console.log(copy_response_content);
-                // renderResponseStatus(copy_response_content);
+                renderResponseStatus(copy_response_content);
 
                 break;
+
+            case ACTIONS[3]: // zip
+                showOptionWindow("Zip files");
+
+                console.log(requestBody);
+
+                let zip_response = await fetch("action_zip.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                    },
+                    body: requestBody
+                });
+                let zip_response_content = await zip_response.text();
+                window.open(zip_response_content, '_blank').focus();
+                window.close();
+                console.log(zip_response_content);
+                
 
             default:
                 break;
