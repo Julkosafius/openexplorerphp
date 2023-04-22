@@ -24,3 +24,11 @@ $salt = '9509f879cbfd444b4ec76c7af6416c46a33f4a353d96aa1be01fd640a2e37144';
 //$lang_json = file_get_contents('lang/'.locale_get_default().'.json');
 $lang_json = file_get_contents('lang/en_US.json');
 $lang = json_decode($lang_json, true);
+
+$allowed_file_types = [
+    'application/pdf',
+    'image/gif',
+    'image/jpeg',
+    'image/png',
+    'text/plain'
+];

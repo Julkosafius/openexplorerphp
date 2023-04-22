@@ -6,18 +6,16 @@ require 'app/utilities.php';
 global $sqlite; 
 
 function reorderFileArray($file_post) {
-    $file_arr = array();
+    $file_arr = [];
     $file_count = count($file_post['name']);
     $file_keys = array_keys($file_post);
-    for ($i=0; $i<$file_count; $i++) {
+    for ($i = 0; $i < $file_count; $i++) {
         foreach ($file_keys as $key) {
             $file_arr[$i][$key] = $file_post[$key][$i];
         }
     }
     return $file_arr;
 }
-
-$sqlite = new SQLiteUtilities((new SQLiteConnection())->connect());
 
 // get names of the uploaded file
 $files = reorderFileArray($_FILES['files']);
@@ -47,7 +45,7 @@ foreach ($files as $file) {
         break;
     }
 
-    if(!$status_message) {     
+    if (!$status_message) {  
         if (!is_uploaded_file($file['tmp_name'])) {
             $status_message = 'Error uploading file: unknown error.';
         } else {
@@ -59,14 +57,17 @@ foreach ($files as $file) {
             $file_size = filesize($file['tmp_name']);
             $file_time = filemtime($file['tmp_name']);
 
-            // check data integrity
-            if (strlen($file_name) > MAX_FILE_NAME_LEN) die();
-            if ($file_size >= INTEGER_MAX_VALUE) die();
-
             $location = 'data'.DIRECTORY_SEPARATOR.$_COOKIE['user_id'].DIRECTORY_SEPARATOR.$file_hash.'.'.$file_type;
+            $mime_info = new finfo(FILEINFO_MIME_TYPE); 
 
-            // trying to move the file
-            if(!move_uploaded_file($file['tmp_name'], $location)) { // No error suppression so we can see the underlying error.
+            // check data integrity
+            if (strlen($file_name) > MAX_FILE_NAME_LEN) {
+                $status_message = 'Error uploading '.$file_name.'.'.$file_type.': file name too long.';
+            } elseif ($file_size >= INTEGER_MAX_VALUE) {
+                $status_message = 'Error uploading '.$file_name.'.'.$file_type.': file too large for this folder.';
+            } elseif (!in_array($mime_info->file($file['tmp_name']), $allowed_file_types)) {
+                $status_message = 'Error uploading '.$file_name.'.'.$file_type.': file type not allowed.';
+            } elseif (!move_uploaded_file($file['tmp_name'], $location)) { // No error suppression so we can see the underlying error.
                 $status_message = 'Error uploading '.$file_name.'.'.$file_type.': could not save upload (this will probably be a permissions problem in '.$location.')';
             } else {
                 $status_message = $file_name.'.'.$file_type.' uploaded successfully.';

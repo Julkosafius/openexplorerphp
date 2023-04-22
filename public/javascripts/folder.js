@@ -282,19 +282,27 @@ async function addFile() {
     async function fileUpload(e) {
         e.preventDefault();
 
+        let status_array = [];
+        const PROGRESS_BAR = document.createElement("progress");
+        PROGRESS_BAR.max = FILE_UPLOAD_INPUT.files.length;
+        PROGRESS_BAR.value = 0;
+        OPTION_WINDOW_CONTENT.innerHTML = "";
+        OPTION_WINDOW_CONTENT.appendChild(PROGRESS_BAR);
+
         if (FILE_UPLOAD_INPUT.files.length > 0) {
-            let formData = new FormData();
+            let form_data = new FormData();
             for (let i = 0; i < FILE_UPLOAD_INPUT.files.length; i++) {
-                formData.append("files[]", FILE_UPLOAD_INPUT.files[i]);
+                let file_data = new FormData();
+                file_data.append("file", FILE_UPLOAD_INPUT.files[i]);
+                file_data.append("curr_folder_id", curr_folder_id);
+                const rawUploadResponse = await fetch("fileupload_single.php", {
+                    method: "POST",
+                    body: file_data
+                });
+                status_array.push(await rawUploadResponse.text());
+                PROGRESS_BAR.value += 1;
             }
-            formData.append("curr_folder_id", curr_folder_id);
-            console.log(formData);
-            
-            const rawUploadResponse = await fetch("fileupload.php", {
-                method: "POST", 
-                body: formData
-            });
-            renderResponseStatus(await rawUploadResponse.json());
+            renderResponseStatus(status_array);
             
             await getFolderContentsAJAX(curr_folder_id);
         }

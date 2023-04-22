@@ -22,6 +22,8 @@
 
 - tree.php löschen
 
+- fileupload.php (multiupload) entfernen
+
 - UI sperren beim laden
 
 - CSS Klasse nodisplay für option window in folder.js einbauen statt ```style.display = "block"```
@@ -46,3 +48,5 @@ DOKU
   - upload_max_filesize erhoehen
   - max_execution_time auf 300
   - post_max_size auf 24
+  - max_execution_time = 30
+upload_max_filesize = 2M

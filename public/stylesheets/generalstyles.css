@@ -100,3 +100,10 @@ li span {
 #optionWindowContent {
     text-align: left;
 }
+
+progress {
+    text-align: center;
+}
+progress:after {
+    content: attr(value)'/'attr(max);
+}
