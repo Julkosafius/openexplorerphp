@@ -3,8 +3,6 @@
 require 'app/utilities.php';
 require 'app/globals.php';
 
-print_r($_COOKIE);
-
 if (!isset($_COOKIE['locale'])) {
     setcookie('locale', locale_get_default(), 0, '/');
 }

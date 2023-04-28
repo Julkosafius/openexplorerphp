@@ -4,8 +4,6 @@
 
 - download implementieren
 
-- upload progress bar implementieren
-
 - ordnerinhalte alphabetisch sortieren lassen (allg. Sortieroption implementieren als parameter für getFolderContents)
 
 - leute, die javascript blockiert haben vom verwenden der seite hindern    noscript
@@ -49,4 +47,4 @@ DOKU
   - max_execution_time auf 300
   - post_max_size auf 24
   - max_execution_time = 30
-upload_max_filesize = 2M
+  - upload_max_filesize = 2M

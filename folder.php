@@ -53,6 +53,12 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 
         <div id="breadcrumbs"></div>
 
+        <div id="sortBtns">
+            <button id="sortByNameBtn">Name ^</button>
+            <button id="sortByTimeBtn">Date ^</button>
+            <button id="sortBySizeBtn">Size ^</button>
+        </div>
+
         <label for="selectAll"><?= ucfirst($lang['select_all']) ?>:</label>
         <input type="checkbox" id="selectAll">
 

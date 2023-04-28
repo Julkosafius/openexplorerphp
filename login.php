@@ -1,40 +1,32 @@
 <?php
-global $salt;
+require 'app/globals.php';
+require 'app/utilities.php';
 
-print_r($_COOKIE);
+global $salt, $sqlite, $lang;
 
-    require 'app/globals.php';
-    require 'app/utilities.php';
-    require 'vendor/autoload.php';
+function doesLoginDataExist($user_name, $password) {
+    global $sqlite, $salt;
+    $password = mySHA256($password, $salt, 10000);
+    $user_count = $sqlite->getFirstColumnValue('select count(*) as count from users where user_name = "'.$user_name.'" and password = "'.$password.'"', 'count');
+    return $user_count > 0;
+}
 
-    use App\SQLiteConnection as SQLiteConnection;
-    use App\SQLiteUtilities as SQLiteUtilities;
+$loginResponse = "";
 
-    $sqlite = new SQLiteUtilities((new SQLiteConnection())->connect());
+if (isset($_POST['username'])) {
+    $user_name = trim($_POST['username']);
+    $password = trim($_POST['current-password']);
 
-    function doesLoginDataExist($user_name, $password) {
-        global $sqlite, $salt;
-        $password = mySHA256($password, $salt, 10000);
-        $user_count = $sqlite->getFirstColumnValue('select count(*) as count from users where user_name = "'.$user_name.'" and password = "'.$password.'"', 'count');
-        return $user_count > 0;
+    if (!doesLoginDataExist($user_name, $password)) {
+        $loginResponse = USER_NAME_OR_PASSWORD_WRONG;
+    } else {
+        $new_user_id = $sqlite->getFirstColumnValue('select user_id as uid from users where user_name like "'.$user_name.'" and password like "'.mySHA256($password, $salt, 10000).'"', 'uid');
+        // save the current (last) login time, ip and place
+        $sqlite->executeCommands('update users set last_login_date = "'.generateLoginInfo().'" where user_id like "'.$new_user_id.'"');
+        setcookie('user_id', $new_user_id, 0, '/');
+        redirect('index.php');
     }
-
-    $loginResponse = "";
-
-    if (isset($_POST['username'])) {
-        $user_name = trim($_POST['username']);
-        $password = trim($_POST['current-password']);
-
-        if (!doesLoginDataExist($user_name, $password)) {
-            $loginResponse = USER_NAME_OR_PASSWORD_WRONG;
-        } else {
-            $new_user_id = $sqlite->getFirstColumnValue('select user_id as uid from users where user_name like "'.$user_name.'" and password like "'.mySHA256($password, $salt, 10000).'"', 'uid');
-            // save the current (last) login time, ip and place
-            $sqlite->executeCommands('update users set last_login_date = "'.generateLoginInfo().'" where user_id like "'.$new_user_id.'"');
-            setcookie('user_id', $new_user_id, 0, '/');
-            redirect('index.php');
-        }
-    }
+}
 ?>
 
 <!DOCTYPE html>

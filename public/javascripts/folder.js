@@ -29,6 +29,10 @@ const ACTIONS = ["rm", "mv", "cp", "zip"];
 const ROOT_FOLDER_ID = getCookie("folder_id");
 let curr_folder_id = getCookie("folder_id");
 let breadcrumbs = [];
+let folder_contents_json = {};
+
+let last_sort_property = "name";
+let last_sort_direction = false; // true = small to big, false = big to small (needs to be inverse at the beginning)
 
 const enableActionDropdown = () => {
     if (!ELEMENT_ACTION_DROPDOWN.hasAttribute("disabled")) ELEMENT_ACTION_DROPDOWN.setAttribute("disabled", "disabled");
@@ -111,9 +115,13 @@ async function getFolderContentsAJAX(folder_id, render = true) {
             body: `folder_id=${folder_id}`
         });
         const contents = await rawResponse.json();
+        folder_contents_json = contents;
+        folder_contents_json["folders"].sort(sortByProperty(`folder_${last_sort_property}`, !last_sort_direction ? "asc" : "desc"));
+        folder_contents_json["files"].sort(sortByProperty(`file_${last_sort_property}`, !last_sort_direction ? "asc" : "desc"));
+        
+        console.log(folder_contents_json);
     
-        if (!render) return contents;
-        renderFolderContents(contents);
+        if (render) renderFolderContents(folder_contents_json);
     }
 }
 
@@ -122,7 +130,6 @@ function renderFolderContents(curr_folder_contents_json) {
     SELECT_ALL.checked = false;
     enableActionDropdown();
 
-    console.log(curr_folder_contents_json);
     let parent_folder_id = curr_folder_contents_json['parent_id'];
     let curr_folder_name = curr_folder_contents_json['curr_id'];
     let folders = curr_folder_contents_json['folders'];
@@ -217,6 +224,35 @@ function renderFolderContents(curr_folder_contents_json) {
     }
 }
 
+/**
+ * Sorts an array of objects by a specified property in ascending or descending order.
+ * In case of equal values, the secondary sorting criterion is always the element name: "folder_name" or "file_name".
+ * @param {string} property The name of the property to sort by. 
+ * @param {string} order The sort order, either "asc" for ascending or "desc" for descending. Default is "asc".
+ * @returns {function} A comparison function to pass to Array.sort().
+ * 
+ * The function compares two objects by the specified property and sort order.
+ * If the values of the property are strings, they are compared case-insensitively.
+ * If the values of the property are numbers, they are compared numerically.
+ * @example
+ * const arr = [{ name: "John", age: 25 }, { name: "Mary", age: 30 }, { name: "Bob", age: 20 }];
+ * arr.sort(sortByProperty("name", "asc")); // Sorts by name in ascending order
+ * arr.sort(sortByProperty("age", "desc")); // Sorts by age in descending order
+ */
+function sortByProperty(property, order = "asc") {
+    const sortOrder = order === "desc" ? -1 : 1;
+    return (a, b) => {
+        if (a[property] === b[property]) {
+            const secondaryProp = a.hasOwnProperty("folder_name") ? "folder_name" : "file_name";
+            return a[secondaryProp].toLowerCase().localeCompare(b[secondaryProp].toLowerCase()) * sortOrder;
+        } else if (typeof a[property] === "string") {
+            return a[property].toLowerCase().localeCompare(b[property].toLowerCase()) * sortOrder;
+        } else {
+            return (a[property] - b[property]) * sortOrder;
+        }
+    };
+}
+
 function dragElement(el) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.getElementById(el.id + "Header")) {
@@ -292,6 +328,7 @@ async function addFile() {
         if (FILE_UPLOAD_INPUT.files.length > 0) {
             let form_data = new FormData();
             for (let i = 0; i < FILE_UPLOAD_INPUT.files.length; i++) {
+                PROGRESS_BAR.value += 1;
                 let file_data = new FormData();
                 file_data.append("file", FILE_UPLOAD_INPUT.files[i]);
                 file_data.append("curr_folder_id", curr_folder_id);
@@ -300,7 +337,6 @@ async function addFile() {
                     body: file_data
                 });
                 status_array.push(await rawUploadResponse.text());
-                PROGRESS_BAR.value += 1;
             }
             renderResponseStatus(status_array);
             
@@ -542,7 +578,8 @@ function selectDestinationFolder() {
                 }
             };
 
-            let contents = await getFolderContentsAJAX(folder_id, false);
+            await getFolderContentsAJAX(folder_id, false);
+            let contents = folder_contents_json;
             if (!root_was_initialized && folder_id === ROOT_FOLDER_ID) {
                 contents = {
                     folders : [
@@ -645,6 +682,25 @@ function requestBodyFromObject(obj, prefix = "") {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+    const SORT_NAME_BTN = document.getElementById("sortByNameBtn");
+    const SORT_TIME_BTN = document.getElementById("sortByTimeBtn");
+    const SORT_SIZE_BTN = document.getElementById("sortBySizeBtn");
+
+    let last_sort_btn = SORT_NAME_BTN;
+
+    function sortElements(clicked_btn, property) {
+        last_sort_property = property;
+        last_sort_direction = last_sort_btn === clicked_btn ? !last_sort_direction : false;
+        folder_contents_json["folders"].sort(sortByProperty(`folder_${property}`, !last_sort_direction ? "asc" : "desc"));
+        folder_contents_json["files"].sort(sortByProperty(`file_${property}`, !last_sort_direction ? "asc" : "desc"));
+        last_sort_btn = clicked_btn;
+        renderFolderContents(folder_contents_json);
+    }
+      
+    SORT_NAME_BTN.addEventListener("click", () => sortElements(SORT_NAME_BTN, "name"));
+    SORT_TIME_BTN.addEventListener("click", () => sortElements(SORT_TIME_BTN, "time"));
+    SORT_SIZE_BTN.addEventListener("click", () => sortElements(SORT_SIZE_BTN, "size"));
+
     getFolderContentsAJAX(curr_folder_id);
 
     ADD_FILE_BTN.addEventListener("click", addFile);
