@@ -1,16 +1,16 @@
 "use strict";
 import {formatBytes, formatUnixTime, getCookie} from "./globals.js";
-import {breadcrumbs, renderBreadcrumbs} from "./folder-view/breadcrumbs.js";
+import {breadcrumbs, renderBreadcrumbs} from "./folder-functions/breadcrumbs.js";
 import {
     hideOptionWindow,
     OPTION_WINDOW,
     OPTION_WINDOW_CLOSE,
     OPTION_WINDOW_CONTENT
-} from "./folder-view/optionWindow.js";
-import {addFile} from "./folder-view/addFile.js";
-import {addFolder} from "./folder-view/addFolder.js";
-import {last_sort_direction, last_sort_property, sortByProperty} from "./folder-view/sortingBtns.js";
-import {executeAction} from "./folder-view/executeAction.js";
+} from "./folder-functions/optionWindow.js";
+import {addFile} from "./folder-functions/addFile.js";
+import {addFolder} from "./folder-functions/addFolder.js";
+import {last_sort_direction, last_sort_property, sortByProperty} from "./folder-functions/sortingBtns.js";
+import {executeAction} from "./folder-functions/executeAction.js";
 
 //const rawLangRequest = await fetch(`lang/${getCookie("locale")}.json`);
 //const rawLangRequest = await fetch(`lang/en_US.json`);
@@ -30,49 +30,55 @@ const ADD_FILE_BTN = document.getElementById("addFileBtn");
 const ADD_FOLDER_BTN = document.getElementById("addFolderBtn");
 export const ELEMENT_ACTION_DROPDOWN = document.getElementById("elementAction");
 const ELEMENT_ACTION_BTN = document.getElementById("elementActionBtn");
+const ELEMENT_ACTION_FORM = document.getElementById("elementActionForm");
 export const SELECT_ALL = document.getElementById("selectAll");
 
 
 export let curr_folder_id = getCookie("folder_id");
 export let folder_contents_json = {};
 
+const toggleChildrenDisabledAttr = (element, disabled) => {
+    const disableable_types = ["button", "fieldset", "input", "optgroup", "option", "select", "textarea"];
 
+    Array.from(element.children).forEach(child => {
+        if (disabled && disableable_types.includes(child.tagName.toLowerCase())) {
+            child.setAttribute("disabled", "disabled");
+        } else {
+            child.removeAttribute("disabled");
+        }
+        if (child.children.length > 0) {
+            toggleChildrenDisabledAttr(child, disabled);
+        }
+    });
+}
 
-const enableActionDropdown = () => {
-    if (!ELEMENT_ACTION_DROPDOWN.hasAttribute("disabled")) ELEMENT_ACTION_DROPDOWN.setAttribute("disabled", "disabled");
-    if (!ELEMENT_ACTION_BTN.hasAttribute("disabled")) ELEMENT_ACTION_BTN.setAttribute("disabled", "disabled");
-};
-const disableActionDropdown = () => {
-    if (ELEMENT_ACTION_DROPDOWN.hasAttribute("disabled")) ELEMENT_ACTION_DROPDOWN.removeAttribute("disabled");
-    if (ELEMENT_ACTION_BTN.hasAttribute("disabled")) ELEMENT_ACTION_BTN.removeAttribute("disabled");
-};
+export const lockUIElement = (element, with_loading_animation = true) => {
+    toggleChildrenDisabledAttr(element, true);
 
-const lockUIElement = (element) => {
     element.style.position = "relative";
     const FILLING_DIV = document.createElement("div");
-    const LOADING_SVG = document.createElement("img");
     FILLING_DIV.classList.add("lockUI");
-    LOADING_SVG.src = "public/images/loading.svg";
-    LOADING_SVG.alt = "Loading Symbol";
-    
-    FILLING_DIV.appendChild(LOADING_SVG);
+
+    if (with_loading_animation) {
+        const LOADING_SVG = document.createElement("img");
+        LOADING_SVG.src = "public/images/loading.svg";
+        LOADING_SVG.alt = "Loading Symbol";
+        FILLING_DIV.appendChild(LOADING_SVG);
+    }
+
     element.insertBefore(FILLING_DIV, element.firstChild);
 }
-const unlockUIElement = (element) => {
+export const unlockUIElement = (element) => {
     if (element.firstChild.classList.contains("lockUI")) {
+        toggleChildrenDisabledAttr(element, false);
         element.removeChild(element.firstChild);
     }
 }
-
-// ******
-// Get folder contents and render to screen
-// ******
 
 export async function fetchFolderContents(folder_id, render = true) {
     if (render) curr_folder_id = folder_id;
     
     if (folder_id.length !== 0) {
-        //lockUIElement(document.getElementById("main"));
         const rawResponse = await fetch("ajax_get_folder_contents.php", {
             method: "POST",
             headers: {
@@ -94,7 +100,7 @@ export async function fetchFolderContents(folder_id, render = true) {
 export function renderFolderContents(curr_folder_contents_json) {
     ELEMENT_VIEW.innerHTML = "";
     SELECT_ALL.checked = false;
-    enableActionDropdown();
+    toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, true);
 
     let parent_folder_id = curr_folder_contents_json['parent_id'];
     let curr_folder_name = curr_folder_contents_json['curr_id'];
@@ -114,6 +120,7 @@ export function renderFolderContents(curr_folder_contents_json) {
         let backBtn = document.createElement("button");
         backBtn.innerHTML = "<-";
         backBtn.addEventListener("click", () => {
+            lockUIElement(document.getElementById("main"));
             curr_folder_id = parent_folder_id;
             breadcrumbs.splice(-2);
             fetchFolderContents(parent_folder_id);
@@ -188,7 +195,7 @@ export function renderFolderContents(curr_folder_contents_json) {
         ELEMENT_VIEW.append(file_div);
     }
 
-    //unlockUIElement(document.getElementById("main"));
+    unlockUIElement(document.getElementById("main"));
 }
 
 function dragElement(el) {
@@ -232,10 +239,6 @@ function dragElement(el) {
     }
 }
 
-// ******
-// Upload a new file
-// ******
-
 export function renderResponseStatus(jsonResponse) {
     OPTION_WINDOW_CONTENT.innerHTML = "";
     let msg_list = document.createElement("ol");
@@ -248,23 +251,17 @@ export function renderResponseStatus(jsonResponse) {
     return msg_list;
 }
 
-// ******
-// Create a new folder
-// ******
-
 function selectAllElements() {
     let all_checkbox_inputs = [...document.querySelectorAll('input[type="checkbox"]')];
     all_checkbox_inputs = all_checkbox_inputs.filter(e => e !== SELECT_ALL);
     if (SELECT_ALL.checked) {
         all_checkbox_inputs.forEach(e => e.checked = true);
-        disableActionDropdown();
+        toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, false);
     } else {
         all_checkbox_inputs.forEach(e => e.checked = false);
-        enableActionDropdown();
+        toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, true);
     }
 }
-
-
 
 window.addEventListener("DOMContentLoaded", () => {
     fetchFolderContents(curr_folder_id);
@@ -280,15 +277,16 @@ window.addEventListener("DOMContentLoaded", () => {
         // check if clicked element could be a folder button and reload content
         let buttonElement = e.target.closest("button");
         if (buttonElement && buttonElement.name === "folder") {
+            lockUIElement(document.getElementById("main"));
             fetchFolderContents(buttonElement.value);
         }
 
         // check if clicked element could be a checkbox and manage action dropdown disability
         let checkbox = e.target.closest('input[type="checkbox"]');
         if (checkbox && checkbox.checked) {
-            disableActionDropdown();
+            toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, false);
         } else if (![...document.querySelectorAll('input[type="checkbox"]:checked')].filter(e => e !== SELECT_ALL).length) {
-            enableActionDropdown();
+            toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, true);
         }
     });
 });

@@ -4,7 +4,9 @@
 
 - download implementieren
 
-- folder.js in Teilmodule aufspalten
+- folder.js in Teilmodule aufspalten ...
+
+- einheitliche optionWindow-Verwaltung mit writeOptionWindowContent-Funktion
 
 - UI lock so umschreiben, dass nicht nur ein div drübergelegt wird, sondern auch jedes deaktivierbare child-Element deaktiviert wird
 

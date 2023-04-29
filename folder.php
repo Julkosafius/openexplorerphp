@@ -39,7 +39,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
         <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>
         <button id="addFolderBtn"><?= ucfirst($lang['create_folder']) ?></button>
 
-        <form method="post">
+        <form id="elementActionForm" method="post">
             <label for="elementAction"><?= ucfirst($lang['action_on_element']) ?></label>
             <select name="elementAction" id="elementAction" required="required" disabled="disabled">
                 <option value=""></option>
