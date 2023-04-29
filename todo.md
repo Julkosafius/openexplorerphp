@@ -4,7 +4,9 @@
 
 - download implementieren
 
-- ordnerinhalte alphabetisch sortieren lassen (allg. Sortieroption implementieren als parameter für getFolderContents)
+- folder.js in Teilmodule aufspalten
+
+- UI lock so umschreiben, dass nicht nur ein div drübergelegt wird, sondern auch jedes deaktivierbare child-Element deaktiviert wird
 
 - leute, die javascript blockiert haben vom verwenden der seite hindern    noscript
 

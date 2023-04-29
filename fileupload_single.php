@@ -7,7 +7,7 @@ global $sqlite;
 
 $file = $_FILES['file'];
 
-$folder_id = $_POST['curr_folder_id'];
+$folder_id = $_POST['destination_folder'];
 
 $status_message = 'Error uploading file';
 switch ($file['error']) {

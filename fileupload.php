@@ -21,7 +21,7 @@ function reorderFileArray($file_post) {
 $files = reorderFileArray($_FILES['files']);
 // file_put_contents("t.txt", print_r($files, true)."\n\n".print_r($_FILES, true));
 
-$folder_id = $_POST['curr_folder_id'];
+$folder_id = $_POST['destination_folder'];
 $status_array = [];
 
 foreach ($files as $file) {
