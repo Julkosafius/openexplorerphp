@@ -1,16 +1,17 @@
 import {OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
 import {
     curr_folder_id,
-    ELEMENT_ACTION_DROPDOWN,
-    fetchFolderContents,
     folder_contents_json,
-    renderResponseStatus, SELECT_ALL
+    ELEMENT_ACTION_DROPDOWN,
+    SELECT_ALL,
+    fetchFolderContents,
+    renderResponseStatus
 } from "../folder.js";
 import {getCookie} from "../globals.js";
 
-
 const ACTIONS = ["rm", "mv", "cp", "zip"];
 const ROOT_FOLDER_ID = getCookie("folder_id");
+
 export async function executeAction(e) {
     e.preventDefault();
     let action = ELEMENT_ACTION_DROPDOWN.value;
@@ -36,21 +37,23 @@ export async function executeAction(e) {
             return;
         }
 
-        let requestBody = requestBodyFromObject(grouped_elements_json);
+        let requestBody = new URLSearchParams();
+        for (let [param_name, param_values] of Object.entries(grouped_elements_json)) {
+            param_values.forEach((value, idx) => requestBody.append(`${param_name}[${idx+1}]`, value));
+        }
+        console.log(decodeURI(requestBody.toString()));
 
         switch (action) {
             case ACTIONS[0]: // remove
                 showOptionWindow("Delete?");
 
+                // Confirmation dialogue
                 const DELETE_QUESTION_P = document.createElement("p");
                 const DELETE_BTN = document.createElement("button");
                 DELETE_QUESTION_P.textContent = "Do you really want to delete the selected element(s)?";
                 DELETE_BTN.textContent = "Delete";
-
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_QUESTION_P);
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_BTN);
-
-                // Wait for the button to be clicked
                 await new Promise(resolve => DELETE_BTN.addEventListener("click", resolve, { once: true }));
 
                 let remove_response = await fetch("action_delete.php", {
@@ -70,7 +73,7 @@ export async function executeAction(e) {
                 showOptionWindow("Move where?");
 
                 let move_destination = await selectDestinationFolder();
-                requestBody += `destination=${move_destination}`;
+                requestBody.append("destination", move_destination.toString());
                 console.log(requestBody);
 
                 let move_response = await fetch("action_move.php", {
@@ -90,7 +93,7 @@ export async function executeAction(e) {
                 showOptionWindow("Copy to where?");
 
                 let copy_destination = await selectDestinationFolder();
-                requestBody += `destination=${copy_destination}`;
+                requestBody.append("destination", copy_destination.toString());
                 console.log(requestBody);
 
                 let copy_response = await fetch("action_copy.php", {
@@ -108,8 +111,6 @@ export async function executeAction(e) {
 
             case ACTIONS[3]: // zip
                 showOptionWindow("Zip files");
-
-                console.log(requestBody);
 
                 let zip_response = await fetch("action_zip.php", {
                     method: "POST",
@@ -249,32 +250,4 @@ function selectDestinationFolder() {
             }
         }
     });
-}
-
-/**
- * Transforms an object recursively into a URL parameter string. Examples:
- * { a: 1, b: 2, c: 3 } ... "a=1&b=2&c=3&"
- * { type: [1, 2], value: [a] } ... "type[0]=1&type[1]=2&value[0]=a&"
- * { ol: [ {a: 1}, {b: 2} ], c: 3 } ... "ol[0][a]=1&ol[1][b]=2&c=3&"
- * @param {Object} obj The object to be transformed.
- * @param {string} prefix A variable for recursion, no value needed.
- * @returns A URL parameter string.
- */
-function requestBodyFromObject(obj, prefix = "") {
-    let queryString = "";
-    for (let [key, value] of Object.entries(obj)) {
-        if (typeof value === "object") {
-            queryString += requestBodyFromObject(value, prefix + key + "[");
-        } else {
-            // bracket [] logic
-            let p_len = prefix.length;
-            if (prefix.substring(p_len-3, p_len-2) === "[") {
-                prefix = prefix.slice(0, p_len-1) + "][";
-            }
-            let closingBracket = prefix.substring(p_len) || prefix.substring(p_len-1) === "[";
-
-            queryString += `${prefix}${key}${closingBracket ? "]" : ""}=${value}&`;
-        }
-    }
-    return queryString;
 }

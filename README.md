@@ -6,7 +6,7 @@ A fast and lightweight file manager using SQLite.
 Any user directory is virtualized by the DB and all files are stored in a user-specific folder.
 
 ## Please.
-Do not hesitate and point out flaws and possible improvements. I'm eager to learn and perfect this project. Thanks in advance!
+Do not hesitate and point out flaws and possible improvements. Thanks in advance!
 
 ## Installation
 1. Make sure you have a fully functioning (Apache HTTP 2.4) webserver with PHP &#x2265; 5.6 and SQLite3 installed.

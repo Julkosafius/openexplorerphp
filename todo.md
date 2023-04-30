@@ -8,8 +8,6 @@
 
 - einheitliche optionWindow-Verwaltung mit writeOptionWindowContent-Funktion
 
-- UI lock so umschreiben, dass nicht nur ein div drübergelegt wird, sondern auch jedes deaktivierbare child-Element deaktiviert wird
-
 - leute, die javascript blockiert haben vom verwenden der seite hindern    noscript
 
 - https://stackoverflow.com/questions/13076480/php-get-actual-maximum-upload-size einbinden
@@ -30,13 +28,7 @@
 
 - CSS Klasse nodisplay für option window in folder.js einbauen statt ```style.display = "block"```
 
-- statt requestBodyFromObject die neue URLSearchParams(obj).toString() verwenden zusammen mit urldecode() in PHP
-
-- lockUIElement soll buttons, fieldsets, inputs, optgroups, options, selects und textareas disablen (unlockUIElement wieder enablen)
-
 - php funktion für delete, move, ... die checkt, ob die übergebenen dateien und ordner überhaupt uns gehören
-
-- (await) getFolderContentsAJAX ?
 
 - daten verschlüsselt oder verfremdet speichern und nur mit korrekter ID entschlüsseln
   - enc.php Dateierweiterung nach iv auch speichern mit länge + erweiterung

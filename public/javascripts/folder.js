@@ -37,17 +37,17 @@ export const SELECT_ALL = document.getElementById("selectAll");
 export let curr_folder_id = getCookie("folder_id");
 export let folder_contents_json = {};
 
-const toggleChildrenDisabledAttr = (element, disabled) => {
+const toggleChildrenDisabledAttr = (element, disable) => {
     const disableable_types = ["button", "fieldset", "input", "optgroup", "option", "select", "textarea"];
 
     Array.from(element.children).forEach(child => {
-        if (disabled && disableable_types.includes(child.tagName.toLowerCase())) {
+        if (disable && disableable_types.includes(child.tagName.toLowerCase())) {
             child.setAttribute("disabled", "disabled");
         } else {
             child.removeAttribute("disabled");
         }
         if (child.children.length > 0) {
-            toggleChildrenDisabledAttr(child, disabled);
+            toggleChildrenDisabledAttr(child, disable);
         }
     });
 }
@@ -93,7 +93,10 @@ export async function fetchFolderContents(folder_id, render = true) {
         
         console.log(folder_contents_json);
     
-        if (render) renderFolderContents(folder_contents_json);
+        if (render) {
+            lockUIElement(document.getElementById("main"));
+            renderFolderContents(folder_contents_json);
+        }
     }
 }
 
@@ -120,7 +123,6 @@ export function renderFolderContents(curr_folder_contents_json) {
         let backBtn = document.createElement("button");
         backBtn.innerHTML = "<-";
         backBtn.addEventListener("click", () => {
-            lockUIElement(document.getElementById("main"));
             curr_folder_id = parent_folder_id;
             breadcrumbs.splice(-2);
             fetchFolderContents(parent_folder_id);
@@ -277,7 +279,6 @@ window.addEventListener("DOMContentLoaded", () => {
         // check if clicked element could be a folder button and reload content
         let buttonElement = e.target.closest("button");
         if (buttonElement && buttonElement.name === "folder") {
-            lockUIElement(document.getElementById("main"));
             fetchFolderContents(buttonElement.value);
         }
 
