@@ -17,8 +17,6 @@ $files = array_flip(array_map($remove_file_extension, scandir('data'.DIRECTORY_S
 unset($files['']);
 unset($files['.']);
 
-// echo print_r($_POST, true);
-
 function deleteFile($file_id, $physicalDelete = true) {
     global $sqlite, $files, $status_array;
     $file_info = getInfo($file_id, 'files');

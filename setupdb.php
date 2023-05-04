@@ -75,8 +75,10 @@ if (count($table_commands) === count($table_list)) {
     <table>
         <caption>Generated tables.</caption>
         <thead>
-            <th>Nr.</th>
-            <th>Name</th>
+            <tr>
+                <th>Nr.</th>
+                <th>Name</th>
+            </tr>
         </thead>
         <tbody>
 <?php

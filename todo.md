@@ -28,8 +28,6 @@
 
 - CSS Klasse nodisplay für option window in folder.js einbauen statt ```style.display = "block"```
 
-- php funktion für delete, move, ... die checkt, ob die übergebenen dateien und ordner überhaupt uns gehören
-
 - daten verschlüsselt oder verfremdet speichern und nur mit korrekter ID entschlüsseln
   - enc.php Dateierweiterung nach iv auch speichern mit länge + erweiterung
   - aes als Klasse nach app/ und functions nach utilities.php
