@@ -71,7 +71,7 @@ if (!empty($file_paths)) {
 // add all directly selected files
 if (!empty($files)) {
     foreach ($files as $file_id) {
-        if (!isIdValid($file_id, 'folders')) {
+        if (!isIdValid($file_id, 'files')) {
             echo 'One or more of the files to be zipped do not exist.';
             die();
         } elseif (!isPropertyOfUser($file_id, 'files')) {

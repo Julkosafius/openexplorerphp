@@ -1,4 +1,4 @@
-import {hideOptionWindow, OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
+import {hideOptionWindow, OPTION_WINDOW, OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
 import {
     curr_folder_id,
     folder_contents_json,
@@ -74,7 +74,6 @@ export async function executeAction(e) {
 
                 let move_destination = await selectDestinationFolder();
                 requestBody.append("destination", move_destination.toString());
-                console.log(requestBody);
 
                 let move_response = await fetch("action_move.php", {
                     method: "POST",
@@ -94,7 +93,6 @@ export async function executeAction(e) {
 
                 let copy_destination = await selectDestinationFolder();
                 requestBody.append("destination", copy_destination.toString());
-                console.log(requestBody);
 
                 let copy_response = await fetch("action_copy.php", {
                     method: "POST",
@@ -146,9 +144,10 @@ function selectDestinationFolder() {
 
         TREE_VIEW.id = "tree_view";
         SUBMIT_BTN.textContent = "Select Folder";
-        SUBMIT_BTN.addEventListener("click", () => {
+        SUBMIT_BTN.addEventListener("click", (e) => {
+            e.preventDefault();
             resolve(selected_folder_id);
-        });
+        }, { once: true });
 
         TREE_VIEW.appendChild(MAIN_LIST);
         OPTION_WINDOW_CONTENT.appendChild(TREE_VIEW);
@@ -201,6 +200,7 @@ function selectDestinationFolder() {
                 };
 
                 const onFolderClick = (e) => {
+                    e.preventDefault();
                     selected_folder_id = F_ID;
                     console.log(`Selected folder: ${selected_folder_id}`);
 
@@ -243,6 +243,7 @@ function selectDestinationFolder() {
 
                 if (F_ELEMENT_LI.parentNode === MAIN_LIST) F_TOGGLE_BTN.click();
             }
+            if(!OPTION_WINDOW.open) OPTION_WINDOW.showModal();
         }
     });
 }
