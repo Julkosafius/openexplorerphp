@@ -9,7 +9,7 @@
     "delete": "delete",
     "copy": "copy",
     "move": "move",
-    "zip": "pack ZIP-file",
+    "zip": "download",
     "go": "go",
     "action_on_element": "action on selected element",
     "select_all": "select all",

@@ -1,17 +1,24 @@
 "use strict";
-export const OPTION_WINDOW = document.getElementById("optionWindow");
+export const OPTION_WINDOW = document.querySelector("[data-modal]");
 export const OPTION_WINDOW_TITLE = document.getElementById("optionWindowTitle");
 export const OPTION_WINDOW_CONTENT = document.getElementById("optionWindowContent");
-export const OPTION_WINDOW_CLOSE = document.getElementById("closeOptionWindow");
+export const OPTION_WINDOW_CLOSE = document.querySelector("[data-close-modal]");
 
+OPTION_WINDOW.addEventListener("click", (e) => {
+    const dialog_dimensions = OPTION_WINDOW.getBoundingClientRect();
+    if (e.clientX < dialog_dimensions.left
+     || e.clientX > dialog_dimensions.right
+     || e.clientY < dialog_dimensions.top
+     || e.clientY > dialog_dimensions.bottom) {
+        hideOptionWindow();
+    }
+});
 export const showOptionWindow = (title = "OptionWindow") => {
+    OPTION_WINDOW.showModal();
     OPTION_WINDOW_CONTENT.innerHTML = "";
-    OPTION_WINDOW.classList.remove("hide");
-    OPTION_WINDOW.classList.add("show");
     OPTION_WINDOW_TITLE.textContent = title;
 }
 export const hideOptionWindow = () => {
-    OPTION_WINDOW.classList.remove("show");
-    OPTION_WINDOW.classList.add("hide");
+    OPTION_WINDOW.close();
     OPTION_WINDOW_TITLE.textContent = "";
 }

@@ -1,4 +1,4 @@
-import {OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
+import {hideOptionWindow, OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
 import {
     curr_folder_id,
     folder_contents_json,
@@ -15,7 +15,7 @@ const ROOT_FOLDER_ID = getCookie("folder_id");
 export async function executeAction(e) {
     e.preventDefault();
     let action = ELEMENT_ACTION_DROPDOWN.value;
-    if (action && ACTIONS.includes(action)) {
+    if (action) {
         /**
          * get grouped_elements_json object of all checked elements like so
          * { "folder" : ["3", "25", ...], "file" : ["67", "128", ...] }
@@ -110,22 +110,17 @@ export async function executeAction(e) {
                 break;
 
             case ACTIONS[3]: // zip
-                showOptionWindow("Zip files");
 
-                let zip_response = await fetch("action_zip.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-                    },
-                    body: requestBody
-                });
-                let zip_response_content = await zip_response.text();
-                window.open(zip_response_content, '_blank').focus();
-                window.close();
-                console.log(zip_response_content);
+                window.open(`action_zip.php?${requestBody}`, "_blank");
+                hideOptionWindow();
+                break;
 
 
             default:
+                showOptionWindow("What happened?");
+                const INVALID_ACTION_ERR = document.createElement("p");
+                INVALID_ACTION_ERR.textContent = "Your selected action is invalid.";
+                OPTION_WINDOW_CONTENT.appendChild(INVALID_ACTION_ERR);
                 break;
         }
 

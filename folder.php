@@ -25,15 +25,15 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 </head>
 <body>
 
-    <div id="optionWindow" class="hide">
+    <dialog data-modal>
         <div id="optionWindowHeader">
             <span id="optionWindowTitle">Title</span>
-            <button id="closeOptionWindow">X</button>
+            <button data-close-modal>X</button>
         </div>
         <div id="optionWindowContent">
             
         </div>
-    </div>
+    </dialog>
 
     <main>
         <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>

@@ -13,5 +13,7 @@ Do not hesitate and point out flaws and possible improvements. Thanks in advance
 2. You will need the following PHP extensions: ```ctype```, ```intl```, ```json```, ```mbstring```, ```pdo```. You can manage them with Composer or install them manually (and activate them in ```php.ini```).
 3. If everything is up and running, you may try to run ```setupdb.php``` to initialize the database under ```./db/```.
 4. That's it. Go to the standard port of your localhost/register.php, and you can start to manage your files!
+5. The standard test user is ```qwertz``` with the password ```12345```.
 
 You can (de-) activate Developer Mode in ```folder.js``` at the top and look at the console output.
+
