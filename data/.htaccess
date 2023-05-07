@@ -1,0 +1,15 @@
+RewriteEngine On
+RewriteBase /
+
+# Set user_id_folder based on user_id cookie
+RewriteCond %{HTTP_COOKIE} user_id=([^;]+) [NC]
+RewriteRule .* - [E=user_id_folder:%1]
+
+# If user_id_folder is set, allow access to only that folder
+RewriteCond %{ENV:user_id_folder} !=""
+RewriteCond %{REQUEST_URI}:/my-app/openexplorerphp/data/%{ENV:user_id_folder}/ !^(.+)(?:/[^/]*)?:\1/$ [NC]
+RewriteRule .* - [F]
+
+# If user_id_folder is not set, deny access to everything
+RewriteCond %{ENV:user_id_folder} =""
+RewriteRule .* - [F]

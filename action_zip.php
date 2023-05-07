@@ -29,6 +29,7 @@ $folders = isset($_GET['folders']) ? $_GET['folders'] : null;
 define("PATH_PREAMBLE", 'data' . DIRECTORY_SEPARATOR . $_COOKIE['user_id'] . DIRECTORY_SEPARATOR);
 
 $file_paths = [];
+$added_sth = false;
 
 if (!empty($folders)) {
     foreach ($folders as $folder_id) {
@@ -49,7 +50,7 @@ $zip = new ZipFile();
 // add all files from subfolders (and create them in the process)
 if (!empty($file_paths)) {
     foreach ($file_paths as $file_id => $file_info) {
-        if (!isIdValid($file_id, 'folders')) {
+        if (!isIdValid($file_id, 'files')) {
             echo 'One or more of the files from a subfolder to be zipped do not exist.';
             die();
         } elseif (!isPropertyOfUser($file_id, 'files')) {
@@ -65,6 +66,7 @@ if (!empty($file_paths)) {
             die();
         }
         $zip->addFile(file_get_contents($system_path), $zip_path);
+        $added_sth = true;
     }
 }
 
@@ -88,12 +90,17 @@ if (!empty($files)) {
             die();
         }
         $zip->addFile(file_get_contents($system_path), $file_name.'.'.$file_type);
+        $added_sth = true;
     }
 }
 
-header("Content-type: application/octet-stream");
-header("Content-Disposition: attachment; filename=download.zip");
-header("Content-Description: Files of an applicant");
+if ($added_sth) {
+    header("Content-type: application/octet-stream");
+    header("Content-Disposition: attachment; filename=download.zip");
+    header("Content-Description: Files of an applicant");
 
 // get the zip content and send it back to the browser
-echo $zip->file();
+    echo $zip->file();
+} else {
+    echo 'No files given.';
+}

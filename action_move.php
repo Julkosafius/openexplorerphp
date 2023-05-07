@@ -1,4 +1,9 @@
 <?php
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath( $_SERVER['SCRIPT_FILENAME'])) {
+    header('Location: error.php', true, 403);
+    die();
+}
+
 require 'app/globals.php';
 require 'app/utilities.php';
 
