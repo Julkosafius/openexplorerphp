@@ -1,5 +1,4 @@
 :root {
-    --bgColor: black;
     --blank: #414547;
     --darkgreen: #346410;
     --darkgrey: #18181a;
@@ -7,8 +6,31 @@
     --green: #6ecf22;
     --red: #bc382d;
     --round-corners: 0.5em;
-    --textColor: white;
     --yellow: #d8b833;
+    --font-size: 1.2em;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: var(--font-size);
+    overflow-y: hidden;
+}
+
+button {
+    border: none;
+    border-radius: var(--round-corners);
+    outline: transparent;
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: auto;
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
 }
 
 .successful {
@@ -19,8 +41,8 @@
     color: #bc382d;
 }
 
-body {
-    overflow-y: scroll;
+select {
+    border-radius: var(--round-corners);
 }
 
 table, td, th {
@@ -35,14 +57,118 @@ table {
     display: none;
 }
 
-.folderBtn {
+#elementView {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+#elementView button {
+    padding: 0.5em;
+}
+
+#optionWindowHeader > button[data-close-modal] {
+    background-color: var(--red);
+    background-image: url("../images/x.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    place-self: start end;
+    height: var(--font-size);
+    width: var(--font-size);
+}
+
+#optionWindowHeader > #optionWindowTitle {
+    overflow: hidden;
+    place-self: start start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+#optionWindowHeader {
+    display: grid;
+    gap: 0 var(--font-size);
+    grid-template-columns: 1fr min-content;
+    margin-bottom: var(--font-size);
+}
+
+dialog {
+    border: none;
+    border-radius: var(--round-corners);
+    max-width: 90%;
+}
+
+dialog input {
+    width: 100%;
+}
+
+.folder,
+.file {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+button[name=folder] {
     background-color: #d8b833;
     padding: 0;
 }
 
-.fileBtn {
+button[name=folder]:before {
+    content: url("../images/folder.svg");
+}
+
+button[name=file]:before {
+    content: url("../images/file.svg");
+}
+
+button[name=folder],
+button[name=file] {
+    border-radius: var(--round-corners);
+    display: grid;
+    grid-template-columns: min-content minmax(10px, 6fr) minmax(95px, 1fr) minmax(50px, 1fr);
+    overflow: hidden;
+    width: 100%;
+}
+
+@media (width <= 400px) {
+    button[name=folder],
+    button[name=file] {
+        grid-template-columns: min-content 1fr;
+    }
+    button[name=folder] > span:nth-child(n+2),
+    button[name=file] > span:nth-child(n+2) {
+        display: none;
+    }
+}
+
+
+button[name=folder] > span,
+button[name=file] > span {
+    overflow: hidden;
+    place-self: center stretch;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+button[name=folder] > span:first-child,
+button[name=file] > span:first-child {
+    place-self: center start;
+}
+
+button[name=folder]:before,
+button[name=file]:before {
+    display: inline-block;
+    height: calc(var(--font-size) - 0.2em);
+    width: calc(var(--font-size) - 0.2em);
+}
+
+button[name=file] {
     background-color: white;
     padding: 0;
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
 }
 
 .show {
@@ -88,4 +214,16 @@ progress {
 }
 progress:after {
     content: attr(value)'/'attr(max);
+}
+
+#toggleThemeBtn:before {
+    background-image: url("../images/theme.svg");
+}
+
+.icon-before:before {
+    content: " ";
+    background-size: cover;
+    display: inline-block;
+    height: 0.9em;
+    width: 0.9em
 }

@@ -243,7 +243,7 @@ function selectDestinationFolder() {
 
                 if (F_ELEMENT_LI.parentNode === MAIN_LIST) F_TOGGLE_BTN.click();
             }
-            if(!OPTION_WINDOW.open) OPTION_WINDOW.showModal();
+            if (!OPTION_WINDOW.open) OPTION_WINDOW.showModal();
         }
     });
 }

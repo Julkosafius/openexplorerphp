@@ -33,9 +33,28 @@ const ELEMENT_ACTION_BTN = document.getElementById("elementActionBtn");
 const ELEMENT_ACTION_FORM = document.getElementById("elementActionForm");
 export const SELECT_ALL = document.getElementById("selectAll");
 
-
 export let curr_folder_id = getCookie("folder_id");
 export let folder_contents_json = {};
+
+
+const THEME_BTN = document.getElementById("toggleThemeBtn");
+const THEME_CSS_LINK = document.querySelector('link[href*="theme"]');
+const PATH_TO_CSS = "public/stylesheets/";
+const LIGHT_THEME_CSS = "theme-light.css";
+const DARK_THEME_CSS = "theme-dark.css";
+
+// toggle theme
+THEME_BTN.addEventListener("click", () => {
+    const NEW_THEME = THEME_CSS_LINK.getAttribute("href") === PATH_TO_CSS + LIGHT_THEME_CSS ?
+        DARK_THEME_CSS : LIGHT_THEME_CSS;
+    THEME_CSS_LINK.href = PATH_TO_CSS + NEW_THEME;
+});
+
+const setThemeFromPreference = () => {
+    const THEME = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ?
+        DARK_THEME_CSS : LIGHT_THEME_CSS;
+    THEME_CSS_LINK.href = PATH_TO_CSS + THEME;
+}
 
 const toggleChildrenDisabledAttr = (element, disable) => {
     const disableable_types = ["button", "fieldset", "input", "optgroup", "option", "select", "textarea"];
@@ -119,7 +138,7 @@ export function renderFolderContents(curr_folder_contents_json) {
     }
     renderBreadcrumbs();
 
-    if (parent_folder_id) {
+    /*if (parent_folder_id) {
         let backBtn = document.createElement("button");
         backBtn.innerHTML = "<-";
         backBtn.addEventListener("click", () => {
@@ -128,7 +147,7 @@ export function renderFolderContents(curr_folder_contents_json) {
             fetchFolderContents(parent_folder_id);
         });
         ELEMENT_VIEW.appendChild(backBtn);
-    }
+    }*/
 
     for (let folder of folders) {
         let folderDiv = document.createElement("div");
@@ -168,12 +187,12 @@ export function renderFolderContents(curr_folder_contents_json) {
 
         let file_btn = document.createElement("button");
 
-        file_btn.classList.add("fileBtn");
-        let file_link = document.createElement("a");
-        file_link.target = "_blank";
-        //file_link.download = file.file_name;
-        file_link.href = `data/${getCookie("user_id")}/${file.file_hash}${file.file_type ? "." : ""}${file.file_type}`;
-        file_btn.appendChild(file_link);
+        file_btn.name = "file";
+        file_btn.addEventListener("click", () => {
+            window.open(
+                `data/${getCookie("user_id")}/${file.file_hash}${file.file_type ? "." : ""}${file.file_type}`,
+                "_blank");
+        });
 
         let checkbox_input = document.createElement("input");
         checkbox_input.type = "checkbox";
@@ -189,9 +208,9 @@ export function renderFolderContents(curr_folder_contents_json) {
         date_span.innerHTML = formatUnixTime(file.file_time) || "nodate";
         size_span.innerHTML = file.file_size ? formatBytes(file.file_size) : "nosize";
 
-        file_link.appendChild(name_span);
-        file_link.appendChild(date_span);
-        file_link.appendChild(size_span);
+        file_btn.appendChild(name_span);
+        file_btn.appendChild(date_span);
+        file_btn.appendChild(size_span);
 
         file_div.appendChild(file_btn);
         ELEMENT_VIEW.append(file_div);
@@ -224,8 +243,11 @@ function selectAllElements() {
     }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    fetchFolderContents(curr_folder_id);
+window.addEventListener("DOMContentLoaded", async () => {
+    await fetchFolderContents(curr_folder_id);
+
+    setThemeFromPreference();
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", setThemeFromPreference);
 
     ADD_FILE_BTN.addEventListener("click", async() => {await addFile(curr_folder_id)});
     ADD_FOLDER_BTN.addEventListener("click", async() => {await addFolder(curr_folder_id)});

@@ -20,6 +20,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenExplorer</title>
     <link rel="stylesheet" href="public/stylesheets/normalize.css" type="text/css">
+    <link rel="stylesheet" href="public/stylesheets/theme-light.css" type="text/css">
     <link rel="stylesheet" href="public/stylesheets/generalstyles.css" type="text/css">
     <link rel="shortcut icon" href="public/images/favico/favico_r.ico" type="image/x-icon">
 </head>
@@ -28,7 +29,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
     <dialog data-modal>
         <div id="optionWindowHeader">
             <span id="optionWindowTitle">Title</span>
-            <button data-close-modal>X</button>
+            <button data-close-modal></button>
         </div>
         <div id="optionWindowContent">
             
@@ -38,6 +39,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
     <main>
         <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>
         <button id="addFolderBtn"><?= ucfirst($lang['create_folder']) ?></button>
+        <button id="toggleThemeBtn" class="icon-before"></button>
 
         <form id="elementActionForm" method="post">
             <label for="elementAction"><?= ucfirst($lang['action_on_element']) ?></label>
