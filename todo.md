@@ -2,6 +2,8 @@
   - bug, mit doppelten dateinamen, wenn dateien kopiert wurden
   - addEmptyDir bug -> als zip stream implementieren
 
+- checken ob, order, in den man verschieben möchte, nicht ein übergeordneter ordner ist
+
 - download implementieren
 
 - folder.js in Teilmodule aufspalten ...

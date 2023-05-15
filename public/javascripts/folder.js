@@ -113,7 +113,7 @@ export async function fetchFolderContents(folder_id, render = true) {
         console.log(folder_contents_json);
     
         if (render) {
-            lockUIElement(document.getElementById("main"));
+            lockUIElement(ELEMENT_VIEW);
             renderFolderContents(folder_contents_json);
         }
     }
@@ -137,6 +137,14 @@ export function renderFolderContents(curr_folder_contents_json) {
         });
     }
     renderBreadcrumbs();
+
+    // reprogram the functionality of the browser's back button
+    /*window.onpopstate = async () => {
+        curr_folder_id = parent_folder_id;
+        breadcrumbs.splice(-2);
+        await fetchFolderContents(parent_folder_id);
+    };
+    history.pushState({}, "");*/
 
     /*if (parent_folder_id) {
         let backBtn = document.createElement("button");
@@ -187,6 +195,8 @@ export function renderFolderContents(curr_folder_contents_json) {
 
         let file_btn = document.createElement("button");
 
+        // TODO: avoid event listener (use anchor tag instead?)
+
         file_btn.name = "file";
         file_btn.addEventListener("click", () => {
             window.open(
@@ -216,7 +226,7 @@ export function renderFolderContents(curr_folder_contents_json) {
         ELEMENT_VIEW.append(file_div);
     }
 
-    unlockUIElement(document.getElementById("main"));
+    unlockUIElement(ELEMENT_VIEW);
 }
 
 export function renderResponseStatus(jsonResponse) {

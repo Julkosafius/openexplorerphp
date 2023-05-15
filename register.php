@@ -92,7 +92,8 @@ if (isset($_POST['username'])) {
     <h1><?= ucwords($lang['register']) ?>!</h1>
     <form id="register_form" method="post">
         <label for="user_name"><?= ucwords($lang['user_name']) ?>:</label>
-        <input id="user_name" name="username" type="text" maxlength="255" required="required" autocomplete="username">
+        <input id="user_name" name="username" type="text" maxlength="255"
+               required="required" autocomplete="username" autofocus>
         <label for="password1"><?= ucwords($lang['password']) ?>:</label>
         <input id="password1" name="new-password" type="password" required="required" autocomplete="new-password">
         <label for="password2"><?= ucfirst($lang['retype_password']) ?>:</label>

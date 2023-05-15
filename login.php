@@ -44,9 +44,11 @@ if (isset($_POST['username'])) {
     <h1><?= ucwords($lang['login']) ?>!</h1>
     <form id="login_form" method="post">
         <label for="user_name"><?= ucwords($lang['user_name']) ?>:</label>
-        <input id="user_name" name="username" type="text" maxlength="255" required="required" autocomplete="username">
+        <input id="user_name" name="username" type="text" maxlength="255"
+               required="required" autocomplete="username" autofocus>
         <label for="password"><?= ucwords($lang['password']) ?>:</label>
-        <input id="password" name="current-password" type="password" required="required" autocomplete="current-password">
+        <input id="password" name="current-password" type="password"
+               required="required" autocomplete="current-password">
         <p id="info"><?= trim($loginResponse) ?></p>
         <button id="submit_btn" type="submit"><?= ucwords($lang['login']) ?></button>
     </form>

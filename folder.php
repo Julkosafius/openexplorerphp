@@ -53,21 +53,18 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
             <button id="elementActionBtn" disabled="disabled"><?= ucfirst($lang['go']) ?>!</button>
         </form>
 
-        <div id="main">
-            <div id="breadcrumbs"></div>
+        <div id="breadcrumbs"></div>
 
-            <div id="sortBtns">
-                <button id="sortByNameBtn">Name ^</button>
-                <button id="sortByTimeBtn">Date ^</button>
-                <button id="sortBySizeBtn">Size ^</button>
-            </div>
-
-            <label for="selectAll"><?= ucfirst($lang['select_all']) ?>:</label>
+        <div id="sortBtns">
             <input type="checkbox" id="selectAll">
+            <button id="sortByNameBtn">Name ^</button>
+            <button id="sortByTimeBtn">Date ^</button>
+            <button id="sortBySizeBtn">Size ^</button>
+        </div>
 
-            <div id="elementView">
 
-            </div>
+        <div id="elementView">
+
         </div>
 
     </main>

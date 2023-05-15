@@ -8,6 +8,7 @@
     --round-corners: 0.5em;
     --yellow: #d8b833;
     --font-size: 1.2em;
+    --thin: 0.05em;
 }
 
 body {
@@ -17,11 +18,21 @@ body {
     overflow-y: hidden;
 }
 
-button {
+button,
+input[type=file]::file-selector-button {
     border: none;
     border-radius: var(--round-corners);
-    outline: transparent;
+    outline-color: transparent;
     cursor: pointer;
+}
+
+/* TODO: button hover doesn't work
+   TODO: scrollbar, else the elements under body overflow disappear
+    */
+
+button:hover:not(:disabled),
+input[type=file]::file-selector-button:hover:not(:disabled) {
+    background-color: var(--highlight-color);
 }
 
 button:disabled {
@@ -58,16 +69,23 @@ table {
 }
 
 #elementView {
-    height: 100%;
-    overflow-y: scroll;
+    height: 50vh;
+    height: 50dvh;
 }
 
 #elementView button {
     padding: 0.5em;
 }
 
+#optionWindowHeader {
+    display: grid;
+    gap: 0 var(--font-size);
+    grid-template-columns: 1fr min-content;
+    margin-bottom: var(--font-size);
+}
+
 #optionWindowHeader > button[data-close-modal] {
-    background-color: var(--red);
+    background-color: var(--highlight-color);
     background-image: url("../images/x.svg");
     background-size: cover;
     background-repeat: no-repeat;
@@ -84,21 +102,39 @@ table {
     width: 100%;
 }
 
-#optionWindowHeader {
-    display: grid;
-    gap: 0 var(--font-size);
-    grid-template-columns: 1fr min-content;
-    margin-bottom: var(--font-size);
-}
-
 dialog {
     border: none;
     border-radius: var(--round-corners);
     max-width: 90%;
 }
 
-dialog input {
-    width: 100%;
+dialog input[type=text] {
+    border: none;
+    border-bottom: solid var(--thin);
+}
+
+dialog input[type=file] {
+    padding: calc(var(--font-size) / 2);
+    border-radius: var(--round-corners);
+    border: solid var(--thin);
+    max-width: 80%;
+}
+
+input[type=file]::file-selector-button {
+    margin-right: var(--font-size);
+}
+
+.drop-container {
+    align-items: center;
+    border: dashed var(--thin);
+    border-radius: var(--round-corners);
+    cursor: pointer;
+    display: flex;
+    gap: calc(var(--font-size) / 2);
+    flex-direction: column;
+    justify-content: center;
+    max-width: 100%;
+    position: relative;
 }
 
 .folder,
@@ -107,33 +143,65 @@ dialog input {
     flex-wrap: nowrap;
 }
 
-button[name=folder] {
-    background-color: #d8b833;
-    padding: 0;
-}
-
-button[name=folder]:before {
-    content: url("../images/folder.svg");
-}
-
-button[name=file]:before {
-    content: url("../images/file.svg");
+#sortBtns {
+    display: grid;
+    gap: 0 calc(var(--font-size) / 2);
+    grid-template-columns: min-content minmax(10px, 4fr) minmax(95px, 1fr) minmax(50px, 1fr);
 }
 
 button[name=folder],
 button[name=file] {
-    border-radius: var(--round-corners);
+    background-color: transparent;
+    border-top: solid var(--text-color) var(--thin);
+    border-radius: 0;
+    color: var(--text-color);
     display: grid;
-    grid-template-columns: min-content minmax(10px, 6fr) minmax(95px, 1fr) minmax(50px, 1fr);
+    gap: 0 calc(var(--font-size) / 2);
+    grid-template-columns: min-content minmax(10px, 4fr) minmax(95px, 1fr) minmax(50px, 1fr);
     overflow: hidden;
     width: 100%;
 }
 
+button[name=folder]:hover,
+button[name=file]:hover {
+    background-color: var(--highlight-color);
+}
+
+button[name=folder]:before {
+    content: url("../images/folder.svg");
+    filter: var(--svg-color);
+}
+
+button[name=file]:before {
+    content: url("../images/file.svg");
+    filter: var(--svg-color);
+}
+
+#sortBtns > button,
+button[name=folder] > span,
+button[name=file] > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+#sortBtns > button {
+    place-self: center stretch;
+}
+
+button[name=folder] > span,
+button[name=file] > span {
+    place-self: center start;
+}
+
 @media (width <= 400px) {
+    #sortBtns,
     button[name=folder],
     button[name=file] {
         grid-template-columns: min-content 1fr;
     }
+    #sortBtns > button:nth-child(n+3),
     button[name=folder] > span:nth-child(n+2),
     button[name=file] > span:nth-child(n+2) {
         display: none;
@@ -141,14 +209,6 @@ button[name=file] {
 }
 
 
-button[name=folder] > span,
-button[name=file] > span {
-    overflow: hidden;
-    place-self: center stretch;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    white-space: nowrap;
-}
 
 button[name=folder] > span:first-child,
 button[name=file] > span:first-child {
@@ -162,12 +222,7 @@ button[name=file]:before {
     width: calc(var(--font-size) - 0.2em);
 }
 
-button[name=file] {
-    background-color: white;
-    padding: 0;
-}
-
-input[type="checkbox"] {
+input[type=checkbox] {
     cursor: pointer;
 }
 

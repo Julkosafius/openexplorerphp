@@ -1,5 +1,7 @@
 :root {
     --background-color: #fff;
-    --text-color: #333;
     --link-color: #06c;
+    --highlight-color: #bebebe;
+    --text-color: #333;
+    --svg-color: invert(0%);
 }

@@ -21,6 +21,8 @@ if (!$destination) {
     die();
 }
 
+// TODO: check that destination isn't a subfolder of one of the folders
+
 $destination_name = $sqlite->getFirstColumnValue('select folder_name as fn from folders where rowid = '.$destination, 'fn');
 
 if (!empty($folders)) {
