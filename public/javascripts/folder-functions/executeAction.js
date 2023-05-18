@@ -3,7 +3,7 @@ import {
     curr_folder_id,
     folder_contents_json,
     ELEMENT_ACTION_DROPDOWN,
-    SELECT_ALL,
+    elementView,
     fetchFolderContents,
     renderResponseStatus
 } from "../folder.js";
@@ -20,8 +20,7 @@ export async function executeAction(e) {
          * get grouped_elements_json object of all checked elements like so
          * { "folder" : ["3", "25", ...], "file" : ["67", "128", ...] }
          */
-        let all_checkbox_inputs = [...document.querySelectorAll('input[type="checkbox"]')];
-        all_checkbox_inputs = all_checkbox_inputs.filter(e => e !== SELECT_ALL);
+        let all_checkbox_inputs = [...elementView.querySelectorAll('input[type="checkbox"]')];
         let all_checked_checkbox_inputs = all_checkbox_inputs.filter(chbx => chbx.checked === true);
         let selected_elements_json = all_checked_checkbox_inputs
             .map(chbx => JSON.parse(`{"type":"${chbx.name}", "value":"${chbx.value}"}`));

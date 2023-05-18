@@ -44,14 +44,6 @@ a {
     cursor: pointer;
 }
 
-.successful {
-    color: var(--green);
-}
-
-.error {
-    color: #bc382d;
-}
-
 select {
     border-radius: var(--round-corners);
 }
@@ -143,6 +135,11 @@ input[type=file]::file-selector-button {
     flex-wrap: nowrap;
 }
 
+.file > a {
+    text-decoration: none;
+    width: 100%;
+}
+
 #sortBtns {
     display: grid;
     gap: 0 calc(var(--font-size) / 2);
@@ -224,14 +221,6 @@ button[name=file]:before {
 
 input[type=checkbox] {
     cursor: pointer;
-}
-
-.show {
-    display: block;
-}
-
-.hide {
-    display: none;
 }
 
 .lockUI {

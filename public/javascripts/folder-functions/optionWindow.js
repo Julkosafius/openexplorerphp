@@ -15,7 +15,7 @@ OPTION_WINDOW.addEventListener("click", (e) => {
 });
 export const showOptionWindow = (title = "OptionWindow") => {
     OPTION_WINDOW.showModal();
-    OPTION_WINDOW_CONTENT.innerHTML = "";
+    OPTION_WINDOW_CONTENT.innerHTML = "Loading&hellip;";
     OPTION_WINDOW_TITLE.textContent = title;
 }
 export const hideOptionWindow = () => {

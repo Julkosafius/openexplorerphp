@@ -39,7 +39,6 @@ async function uniqueUsername() {
         const response = await rawResponse.text();
         UN_INFO_P.className = "";
         UN_INFO_P.textContent = response;
-        UN_INFO_P.classList.add(response === USER_NAME_AVAILABLE ? "successful" : "error");
     }
 }
 

@@ -9,6 +9,7 @@
     "ext-pdo": "*",
     "ext-json": "*",
     "ext-intl": "*",
-    "ext-ctype": "*"
+    "ext-ctype": "*",
+    "ext-fileinfo": "*"
   }
 }

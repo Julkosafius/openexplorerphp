@@ -12,7 +12,6 @@ export function renderBreadcrumbs() {
 
         let new_crumb = document.createElement("a");
         new_crumb.textContent = crumb.folder_name;
-        new_crumb.classList.add("link");
 
         new_crumb.addEventListener("click", async () => {
             let crumb_end = breadcrumbs.findIndex((other_crumb) => other_crumb.folder_id === crumb.folder_id);

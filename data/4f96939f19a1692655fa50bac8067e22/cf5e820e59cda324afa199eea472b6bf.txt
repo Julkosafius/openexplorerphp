@@ -1,0 +1,4 @@
+=> make it "do" and not "think"
+* specific objective for output
+* specific format for answer
+* list of things to avoid

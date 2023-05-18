@@ -1,0 +1,144 @@
+:root {
+    --background-color: white;
+    --highlight: white;
+    --text-color: black;
+    --font-size: 1.2em;
+}
+
+:root:has(#lightTheme:checked) {
+    --background-color: lightblue;
+    --text-color: black;
+}
+
+:root:has(#darkTheme:checked) {
+    --background-color: grey;
+    --text-color: white;
+}
+
+/* raw tags */
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: var(--font-size);
+    height: 100vh;
+    height: 100dvh;
+}
+
+button {
+    border: none;
+    outline-color: transparent;
+}
+
+button:hover:not(:disabled) {
+    background-color: var(--highlight);
+}
+
+nav a {
+    cursor: pointer;
+}
+
+input[type=checkbox] {
+    cursor: pointer;
+}
+
+progress {
+    text-align: center;
+}
+
+progress:after {
+    content: attr(value)'/'attr(max);
+}
+
+#wrapper {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+#wrapper header {
+    flex: 0 1 auto;
+}
+
+#wrapper main {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+}
+
+/* in main */
+
+#elementView a {
+    text-decoration: none;
+}
+
+main input[type=checkbox] {
+    place-self: center stretch;
+}
+
+#sortBtns,
+#elementView button {
+    display: grid;
+    gap: 0 calc(var(--font-size) / 2);
+    grid-template-columns: min-content minmax(10px, 4fr) minmax(95px, 1fr) minmax(50px, 1fr);
+    overflow: hidden;
+}
+
+#sortBtns button,
+#elementView button span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+#sortBtns {
+    background-color: var(--background-color);
+    /*filter: drop-shadow(0 calc(var(--font-size) / 4) 0.75rem rgba(0, 0, 0, 0.5));*/
+    position: sticky;
+    top: 0;
+}
+
+#elementView button {
+    border-top: solid var(--text-color) 0.05em;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+}
+
+/* data modal */
+
+#optionWindowHeader {
+    display: grid;
+    gap: 0 var(--font-size);
+    grid-template-columns: 1fr min-content;
+}
+
+#optionWindowHeader > button[data-close-modal] {
+    background-color: red;
+    background-image: url("../images/x.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    place-self: start end;
+    height: var(--font-size);
+    width: var(--font-size);
+}
+
+#optionWindowHeader > #optionWindowTitle {
+    overflow: hidden;
+    place-self: start start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+/* multipurpose classes */
+
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}

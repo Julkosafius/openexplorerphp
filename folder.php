@@ -20,8 +20,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenExplorer</title>
     <link rel="stylesheet" href="public/stylesheets/normalize.css" type="text/css">
-    <link rel="stylesheet" href="public/stylesheets/theme-light.css" type="text/css">
-    <link rel="stylesheet" href="public/stylesheets/generalstyles.css" type="text/css">
+    <link rel="stylesheet" href="public/stylesheets/generalstyles-new.css" type="text/css">
     <link rel="shortcut icon" href="public/images/favico/favico_r.ico" type="image/x-icon">
 </head>
 <body>
@@ -36,40 +35,50 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
         </div>
     </dialog>
 
-    <main>
-        <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>
-        <button id="addFolderBtn"><?= ucfirst($lang['create_folder']) ?></button>
-        <button id="toggleThemeBtn" class="icon-before"></button>
+    <div id="wrapper">
+        <header>
+            <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>
+            <button id="addFolderBtn"><?= ucfirst($lang['create_folder']) ?></button>
+            <form action="">
+                <label for="lightTheme">Light Theme</label>
+                <input type="radio" id="lightTheme" name="theme">
+                <label for="darkTheme">Dark Theme</label>
+                <input type="radio" id="darkTheme" name="theme">
+            </form>
 
-        <form id="elementActionForm" method="post">
-            <label for="elementAction"><?= ucfirst($lang['action_on_element']) ?></label>
-            <select name="elementAction" id="elementAction" required="required" disabled="disabled">
-                <option value=""></option>
-                <option value="rm"><?= ucfirst($lang['delete']) ?></option>
-                <option value="mv"><?= ucfirst($lang['move']) ?></option>
-                <option value="cp"><?= ucfirst($lang['copy']) ?></option>
-                <option value="zip"><?= ucfirst($lang['zip']) ?></option>
-            </select>
-            <button id="elementActionBtn" disabled="disabled"><?= ucfirst($lang['go']) ?>!</button>
-        </form>
+            <form id="elementActionForm" method="post">
+                <label for="elementAction"><?= ucfirst($lang['action_on_element']) ?></label>
+                <select name="elementAction" id="elementAction" required="required" disabled="disabled">
+                    <option value=""></option>
+                    <option value="rm"><?= ucfirst($lang['delete']) ?></option>
+                    <option value="mv"><?= ucfirst($lang['move']) ?></option>
+                    <option value="cp"><?= ucfirst($lang['copy']) ?></option>
+                    <option value="zip"><?= ucfirst($lang['zip']) ?></option>
+                </select>
+                <button id="elementActionBtn" disabled="disabled"><?= ucfirst($lang['go']) ?>!</button>
+            </form>
+        </header>
 
-        <div id="breadcrumbs"></div>
+        <nav>
+            <div id="breadcrumbs"></div>
+        </nav>
 
-        <div id="sortBtns">
-            <input type="checkbox" id="selectAll">
-            <button id="sortByNameBtn">Name ^</button>
-            <button id="sortByTimeBtn">Date ^</button>
-            <button id="sortBySizeBtn">Size ^</button>
-        </div>
+        <main>
+            <div id="sortBtns">
+                <input type="checkbox" id="selectAll">
+                <button id="sortByNameBtn">Name ^</button>
+                <button id="sortByTimeBtn">Date ^</button>
+                <button id="sortBySizeBtn">Size ^</button>
+            </div>
 
 
-        <div id="elementView">
+            <div id="elementView">
 
-        </div>
+            </div>
+        </main>
 
-    </main>
+    </div>
 
-    
     <script src="public/javascripts/folder.js" type="module"></script>
 </body>
 </html>

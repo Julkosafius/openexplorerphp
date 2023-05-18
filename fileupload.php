@@ -3,7 +3,8 @@ require 'app/globals.php';
 require 'app/utilities.php';
 
 // imports default timezone from utilities
-global $sqlite; 
+global $sqlite;
+global $allowed_file_types;
 
 function reorderFileArray($file_post) {
     $file_arr = [];
@@ -29,23 +30,23 @@ foreach ($files as $file) {
     switch ($file['error']) {
         case UPLOAD_ERR_OK:
             $status_message = false;
-        break;
+            break;
         case UPLOAD_ERR_INI_SIZE:
         case UPLOAD_ERR_FORM_SIZE:
-            $status_message .= ': too large (limit of '.ini_get("upload_max_filesize").' bytes).';
+        $status_message .= ': too large (limit of '.ini_get("upload_max_filesize").' bytes).';
         break;
         case UPLOAD_ERR_PARTIAL:
             $status_message .= ': upload was not completed.';
-        break;
+            break;
         case UPLOAD_ERR_NO_FILE:
             $status_message .= ': zero-length file uploaded.';
-        break;
+            break;
         default:
             $status_message .= ': internal error #'.$file['error'].'.';
-        break;
+            break;
     }
 
-    if (!$status_message) {  
+    if (!$status_message) {
         if (!is_uploaded_file($file['tmp_name'])) {
             $status_message = 'Error uploading file: unknown error.';
         } else {
@@ -58,7 +59,7 @@ foreach ($files as $file) {
             $file_time = filemtime($file['tmp_name']);
 
             $location = 'data'.DIRECTORY_SEPARATOR.$_COOKIE['user_id'].DIRECTORY_SEPARATOR.$file_hash.'.'.$file_type;
-            $mime_info = new finfo(FILEINFO_MIME_TYPE); 
+            $mime_info = new finfo(FILEINFO_MIME_TYPE);
 
             // check data integrity
             if (strlen($file_name) > MAX_FILE_NAME_LEN) {
@@ -83,6 +84,6 @@ foreach ($files as $file) {
     $status_array[] = $status_message;
 }
 
-// file_put_contents("u.txt", print_r(json_encode($status_array), true));
+file_put_contents("u.txt", print_r(json_encode($status_array), true));
 
 echo json_encode($status_array);
