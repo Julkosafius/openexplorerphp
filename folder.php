@@ -37,8 +37,6 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 
     <div id="wrapper">
         <header>
-            <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>
-            <button id="addFolderBtn"><?= ucfirst($lang['create_folder']) ?></button>
             <form action="">
                 <label for="lightTheme">Light Theme</label>
                 <input type="radio" id="lightTheme" name="theme">
@@ -46,8 +44,11 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
                 <input type="radio" id="darkTheme" name="theme">
             </form>
 
+            <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>
+            <button id="addFolderBtn"><?= ucfirst($lang['create_folder']) ?></button>
+
             <form id="elementActionForm" method="post">
-                <label for="elementAction"><?= ucfirst($lang['action_on_element']) ?></label>
+                <label for="elementAction" class="visually-hidden"><?= ucfirst($lang['action_on_element']) ?></label>
                 <select name="elementAction" id="elementAction" required="required" disabled="disabled">
                     <option value=""></option>
                     <option value="rm"><?= ucfirst($lang['delete']) ?></option>
@@ -60,15 +61,16 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
         </header>
 
         <nav>
+            <button id="backBtn"><-</button>
             <div id="breadcrumbs"></div>
         </nav>
 
         <main>
             <div id="sortBtns">
                 <input type="checkbox" id="selectAll">
-                <button id="sortByNameBtn">Name ^</button>
-                <button id="sortByTimeBtn">Date ^</button>
-                <button id="sortBySizeBtn">Size ^</button>
+                <button id="sortByNameBtn">Name &uarr;</button>
+                <button id="sortByTimeBtn">Date &uarr;</button>
+                <button id="sortBySizeBtn">Size &uarr;</button>
             </div>
 
 

@@ -30,7 +30,8 @@ $table_commands = [
         foreign key (parent_folder_id) references folders(rowid)
         on delete cascade,
         foreign key (user_id) references users(user_id)
-        on delete cascade
+        on delete cascade,
+        constraint not_parent_of_oneself check ( parent_folder_id != rowid )
     )',
     'create table if not exists files (
         folder_id integer not null,

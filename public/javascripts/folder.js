@@ -31,6 +31,7 @@ const ADD_FOLDER_BTN = document.getElementById("addFolderBtn");
 export const ELEMENT_ACTION_DROPDOWN = document.getElementById("elementAction");
 const ELEMENT_ACTION_BTN = document.getElementById("elementActionBtn");
 const ELEMENT_ACTION_FORM = document.getElementById("elementActionForm");
+let backBtn = document.getElementById("backBtn");
 export const selectAll = document.getElementById("selectAll");
 
 export let curr_folder_id = getCookie("folder_id");
@@ -87,6 +88,7 @@ export const lockUIElement = (element, with_loading_animation = true) => {
     element.insertBefore(FILLING_DIV, element.firstChild);
 }
 export const unlockUIElement = (element) => {
+    // TODO: doesn't find lockUI (change in DOM) -> implement loop through element's children
     if (element.firstChild.classList && element.firstChild.classList.contains("lockUI")) {
         toggleChildrenDisabledAttr(element, false);
         element.removeChild(element.firstChild);
@@ -112,7 +114,7 @@ export async function fetchFolderContents(folder_id, render = true) {
         console.log(folder_contents_json);
     
         if (render) {
-            lockUIElement(elementView);
+            //lockUIElement(elementView);
             renderFolderContents(folder_contents_json);
         }
     }
@@ -145,16 +147,15 @@ export function renderFolderContents(curr_folder_contents_json) {
     };
     history.pushState({}, "");*/
 
-    /*if (parent_folder_id) {
-        let backBtn = document.createElement("button");
-        backBtn.innerHTML = "<-";
-        backBtn.addEventListener("click", () => {
+    if (parent_folder_id) {
+        backBtn = backBtn.cloneNode(true); // remove previous event listeners
+        backBtn.addEventListener("click", async () => {
+            console.log(curr_folder_id);
             curr_folder_id = parent_folder_id;
             breadcrumbs.splice(-2);
-            fetchFolderContents(parent_folder_id);
+            await fetchFolderContents(parent_folder_id);
         });
-        elementView.appendChild(backBtn);
-    }*/
+    }
 
     for (let folder of folders) {
         const folderBtn = document.createElement("button");
@@ -212,7 +213,7 @@ export function renderFolderContents(curr_folder_contents_json) {
         sizeSpan.innerHTML = file.file_size ? formatBytes(file.file_size) : "nosize";
     }
 
-    unlockUIElement(elementView);
+    //unlockUIElement(elementView);
 }
 
 export function renderResponseStatus(jsonResponse) {
@@ -231,7 +232,9 @@ function selectAllElements() {
     let all_checkbox_inputs = [...elementView.querySelectorAll('input[type="checkbox"]')];
     if (selectAll.checked) {
         all_checkbox_inputs.forEach(e => e.checked = true);
-        toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, false);
+        if (all_checkbox_inputs.length) {
+            toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, false);
+        }
     } else {
         all_checkbox_inputs.forEach(e => e.checked = false);
         toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, true);

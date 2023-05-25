@@ -37,7 +37,7 @@ if (isset($_POST['username'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= ucwords($lang['login']) ?></title>
     <link rel="stylesheet" href="public/stylesheets/normalize.css" type="text/css">
-    <link rel="stylesheet" href="public/stylesheets/generalstyles.css" type="text/css">
+    <link rel="stylesheet" href="public/stylesheets/generalstyles-new.css" type="text/css">
     <link rel="shortcut icon" href="public/images/favico/favico_r.ico" type="image/x-icon">
 </head>
 <body>

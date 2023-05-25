@@ -38,14 +38,6 @@ export async function addFile(destination_folder) {
                     method: "POST",
                     body: file_data
                 });
-                /*
-                Data modal closes unexpectedly and inexplicably during and only during the first loop
-                and has to be reopened.
-                My theory: somehow a submit is triggered that closes the modal (but no idea...)
-                 */
-                if (i === 0) {
-                    OPTION_WINDOW.showModal();
-                }
                 status_array.push(await rawUploadResponse.text());
             }
             renderResponseStatus(status_array);

@@ -109,17 +109,17 @@ function isPropertyOfUser($id, $table) {
     switch ($table) {
         case 'folder':
         case 'folders':
-            return $_COOKIE['user_id'] == $sqlite->getFirstColumnValue('select user_id from folders where user_id like "'.$_COOKIE['user_id'].'" and rowid = '.$id, 'user_id');
-            break;
+            return $_COOKIE['user_id'] == $sqlite->getFirstColumnValue('select user_id from folders
+               where user_id like "'.$_COOKIE['user_id'].'" and rowid = '.$id, 'user_id');
 
         case 'file':
         case 'files':
-            return $_COOKIE['user_id'] == $sqlite->getFirstColumnValue('select user_id from files join folders on folders.rowid = files.folder_id where user_id like "'.$_COOKIE['user_id'].'" and files.rowid = '.$id, 'user_id');
-            break;
-        
+            return $_COOKIE['user_id'] == $sqlite->getFirstColumnValue('select user_id
+                from files join folders on folders.rowid = files.folder_id
+                where user_id like "'.$_COOKIE['user_id'].'" and files.rowid = '.$id, 'user_id');
+
         default:
             return false;
-            break;
     }
 }
 
@@ -142,19 +142,23 @@ function getInfo($id, $table) {
     }
 }
 
-function fileWasCopied($file_id) {#
+function fileWasCopied($file_id) {
     global $sqlite;
-    // if file was not copied, the request returs 1. 1-1 = 0 which is casted to false
-    return (bool) ($sqlite->getFirstColumnValue('select count(file_hash) as cnt from files where file_hash like (select file_hash from files where rowid = '.$file_id.')', 'cnt') - 1);
+    // if file was not copied, the request returs 1. 1-1 = 0 which is cast to false
+    return (bool) ($sqlite->getFirstColumnValue('select count(file_hash) as cnt from files
+            where file_hash like (select file_hash from files where rowid = '.$file_id.')', 'cnt') - 1);
 }
 
 function getFolderContents($folder_id) {
     global $sqlite;
-    $curr_folder_info = $sqlite->getIterator('select parent_folder_id, folder_name from folders where rowid = "'.$folder_id.'"')->fetch(PDO::FETCH_ASSOC);
+    $curr_folder_info = $sqlite->getIterator('select parent_folder_id, folder_name from folders
+                                     where rowid = "'.$folder_id.'"')->fetch(PDO::FETCH_ASSOC);
     $curr_folder_parent_id = $curr_folder_info['parent_folder_id'];
     $curr_folder_name = $curr_folder_info['folder_name'];
-    $folders_iterator = $sqlite->getIterator('select rowid, folder_name, folder_time, folder_size, parent_folder_id from folders where parent_folder_id = "'.$folder_id.'"');
-    $files_iterator = $sqlite->getIterator('select rowid, file_name, file_time, file_size, file_type, file_hash from files where folder_id = "'.$folder_id.'"');
+    $folders_iterator = $sqlite->getIterator('select rowid, folder_name, folder_time, folder_size, parent_folder_id
+                                                from folders where parent_folder_id = "'.$folder_id.'"');
+    $files_iterator = $sqlite->getIterator('select rowid, file_name, file_time, file_size, file_type, file_hash
+                                                from files where folder_id = "'.$folder_id.'"');
     $folders = [];
     $files = [];
     while ($row = $folders_iterator->fetch(PDO::FETCH_ASSOC)) {

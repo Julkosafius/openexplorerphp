@@ -8,9 +8,9 @@ export function renderBreadcrumbs() {
 
     for (let crumb of breadcrumbs) {
         let separator = document.createElement("span");
-        separator.innerHTML = " / ";
+        separator.innerHTML = " &#10093; ";
 
-        let new_crumb = document.createElement("a");
+        let new_crumb = document.createElement("button");
         new_crumb.textContent = crumb.folder_name;
 
         new_crumb.addEventListener("click", async () => {
@@ -24,4 +24,6 @@ export function renderBreadcrumbs() {
         BREADCRUMBS.appendChild(new_crumb);
         BREADCRUMBS.appendChild(separator);
     }
+
+    BREADCRUMBS.removeChild(BREADCRUMBS.lastChild);
 }

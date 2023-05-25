@@ -46,11 +46,14 @@ export async function executeAction(e) {
             case ACTIONS[0]: // remove
                 showOptionWindow("Delete?");
 
+                // TODO: bug that it sometimes deletes only part of the selected files
+
                 // Confirmation dialogue
                 const DELETE_QUESTION_P = document.createElement("p");
                 const DELETE_BTN = document.createElement("button");
                 DELETE_QUESTION_P.textContent = "Do you really want to delete the selected element(s)?";
                 DELETE_BTN.textContent = "Delete";
+                OPTION_WINDOW_CONTENT.innerHTML = "";
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_QUESTION_P);
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_BTN);
                 await new Promise(resolve => DELETE_BTN.addEventListener("click", resolve, { once: true }));
@@ -70,7 +73,7 @@ export async function executeAction(e) {
 
             case ACTIONS[1]: // move
                 showOptionWindow("Move where?");
-
+                OPTION_WINDOW_CONTENT.innerHTML = "";
                 let move_destination = await selectDestinationFolder();
                 requestBody.append("destination", move_destination.toString());
 
@@ -89,7 +92,7 @@ export async function executeAction(e) {
 
             case ACTIONS[2]: // copy
                 showOptionWindow("Copy to where?");
-
+                OPTION_WINDOW_CONTENT.innerHTML = "";
                 let copy_destination = await selectDestinationFolder();
                 requestBody.append("destination", copy_destination.toString());
 
@@ -141,7 +144,7 @@ function selectDestinationFolder() {
         const MAIN_LIST = document.createElement("ul");
         const SUBMIT_BTN = document.createElement("button");
 
-        TREE_VIEW.id = "tree_view";
+        TREE_VIEW.id = "treeView";
         SUBMIT_BTN.textContent = "Select Folder";
         SUBMIT_BTN.addEventListener("click", (e) => {
             e.preventDefault();
@@ -242,7 +245,7 @@ function selectDestinationFolder() {
 
                 if (F_ELEMENT_LI.parentNode === MAIN_LIST) F_TOGGLE_BTN.click();
             }
-            if (!OPTION_WINDOW.open) OPTION_WINDOW.showModal();
+            // if (!OPTION_WINDOW.open) OPTION_WINDOW.showModal();
         }
     });
 }

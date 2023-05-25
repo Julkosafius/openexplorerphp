@@ -1,4 +1,8 @@
 <?php
+
+use App\SQLiteConnection;
+use App\SQLiteUtilities;
+
 require 'app/globals.php';
 require 'app/utilities.php';
 
