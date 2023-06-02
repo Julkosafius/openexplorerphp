@@ -2,7 +2,7 @@
 
 // inherits utilities.php ($sqlite) from index.php
 
-global $sqlite, $lang;
+global $sqlite, $I18N;
 
 if (!isset($_COOKIE['user_id'])) {
     redirect('login.php');
@@ -20,7 +20,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenExplorer</title>
     <link rel="stylesheet" href="public/stylesheets/normalize.css" type="text/css">
-    <link rel="stylesheet" href="public/stylesheets/generalstyles-new.css" type="text/css">
+    <link rel="stylesheet" href="public/stylesheets/generalstyles.css" type="text/css">
     <link rel="shortcut icon" href="public/images/favico/favico_r.ico" type="image/x-icon">
 </head>
 <body>
@@ -44,33 +44,32 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
                 <input type="radio" id="darkTheme" name="theme">
             </form>
 
-            <button id="addFileBtn"><?= ucfirst($lang['upload_file']) ?></button>
-            <button id="addFolderBtn"><?= ucfirst($lang['create_folder']) ?></button>
+            <button id="addFileBtn"><?= ucfirst($I18N['file_upload']) ?></button>
+            <button id="addFolderBtn"><?= ucfirst($I18N['folder_create']) ?></button>
 
             <form id="elementActionForm" method="post">
-                <label for="elementAction" class="visually-hidden"><?= ucfirst($lang['action_on_element']) ?></label>
+                <label for="elementAction" class="visually-hidden"><?= ucfirst($I18N['action_on_element']) ?></label>
                 <select name="elementAction" id="elementAction" required="required" disabled="disabled">
                     <option value=""></option>
-                    <option value="rm"><?= ucfirst($lang['delete']) ?></option>
-                    <option value="mv"><?= ucfirst($lang['move']) ?></option>
-                    <option value="cp"><?= ucfirst($lang['copy']) ?></option>
-                    <option value="zip"><?= ucfirst($lang['zip']) ?></option>
+                    <option value="rm"><?= ucfirst($I18N['delete']) ?></option>
+                    <option value="mv"><?= ucfirst($I18N['move']) ?></option>
+                    <option value="cp"><?= ucfirst($I18N['copy']) ?></option>
+                    <option value="zip"><?= ucfirst($I18N['zip']) ?></option>
                 </select>
-                <button id="elementActionBtn" disabled="disabled"><?= ucfirst($lang['go']) ?>!</button>
+                <button id="elementActionBtn" disabled="disabled"><?= ucfirst($I18N['go']) ?>!</button>
             </form>
         </header>
 
         <nav>
-            <button id="backBtn"><-</button>
             <div id="breadcrumbs"></div>
         </nav>
 
         <main>
             <div id="sortBtns">
                 <input type="checkbox" id="selectAll">
-                <button id="sortByNameBtn">Name &uarr;</button>
-                <button id="sortByTimeBtn">Date &uarr;</button>
-                <button id="sortBySizeBtn">Size &uarr;</button>
+                <button id="sortByNameBtn"><?= ucfirst($I18N['name']) ?> &uarr;</button>
+                <button id="sortByTimeBtn"><?= ucfirst($I18N['date']) ?> &uarr;</button>
+                <button id="sortBySizeBtn"><?= ucfirst($I18N['size']) ?> &uarr;</button>
             </div>
 
 
@@ -81,6 +80,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 
     </div>
 
+    <script src="public/javascripts/theme.js" type="module"></script>
     <script src="public/javascripts/folder.js" type="module"></script>
 </body>
 </html>

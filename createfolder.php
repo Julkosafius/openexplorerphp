@@ -3,6 +3,7 @@ require 'app/globals.php';
 require 'app/utilities.php';
 
 // imports default timezone from utilities
+global $I18N;
 global $sqlite;
 
 // get name of the folder being created
@@ -11,7 +12,7 @@ $folder_id = $_POST['curr_folder_id'];
 $folder_time = time();
 
 if (strlen($folder_name) > MAX_FOLDER_NAME_LEN) {
-    echo 'Folder name too long.';
+    echo $I18N['error_name_too_long'];
     die();
 }
 
@@ -21,4 +22,4 @@ $sqlite->executeCommands('insert into folders(user_id, folder_name, parent_folde
 // check if folder was created successfully
 $folderExists = $sqlite->getFirstColumnValue('select count(*) as cnt from folders where user_id like "'.$_COOKIE['user_id'].'" and folder_name like "'.$folder_name.'" and parent_folder_id like "'.$folder_id.'" and folder_time like "'.$folder_time.'"', 'cnt');
 
-echo $folderExists > 0 ? 'The folder has been created successfully.' : 'Could not create folder.';
+echo $folderExists > 0 ? $I18N['folder_create_ok'] : $I18N['folder_create_fail'];

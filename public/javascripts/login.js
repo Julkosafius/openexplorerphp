@@ -6,7 +6,8 @@ const UNAME_INPUT = document.getElementById("user_name");
 const PW_INPUT = document.getElementById("password");
 const SUBMIT_BTN = document.getElementById("submit_btn");
 
-const checkInput = () => UNAME_INPUT.value.length >= MIN_USER_NAME_LENGTH && PW_INPUT.value.length >= MIN_PASSWORD_LENGTH;
+const checkInput = () => UNAME_INPUT.value.length >= MIN_USER_NAME_LENGTH
+    && PW_INPUT.value.length >= MIN_PASSWORD_LENGTH;
 
 window.addEventListener("DOMContentLoaded", () => {
     // check input data via JavaScript BEFORE submit

@@ -1,10 +1,23 @@
 "use strict";
-export const NO_PASSWORD_MATCH = 'Passwords do not match.';
+import i18n from "../../lang/i18n.json" assert { type: "json" };
+// Another possible solution to implement: dynamic imports
+// const lang_json = await import(`../../lang/${getCookie("locale")}.json`, {
+//     assert: { type: 'json' }
+// });
+// console.log(lang_json.default);
+
+const localeCookie = getCookie("locale");
+
+const usedLocale = i18n[localeCookie] ? localeCookie : "en_US";
+export const I18N = Object.freeze(i18n[usedLocale]);
+export const NO_PASSWORD_MATCH = I18N["password_nomatch"];
 export const USER_NAME_AVAILABLE = 'User name available.';
-export const STH_WENT_WRONG = 'Something went wrong.';
 export const MIN_USER_NAME_LENGTH = 5;
 export const MIN_PASSWORD_LENGTH = 5;
-export const WINDOW_TIMEOUT = 2000;
+
+String.prototype.toLocaleUpperCaseFirst = (string) => {
+    return string.charAt(0).toLocaleUpperCase() + string.slice(1);
+};
 
 export function isAlphaNumeric(str) {
     let code, i, len;
@@ -20,10 +33,10 @@ export function isAlphaNumeric(str) {
 }
 
 export function formatBytes(bytes, decimals) {
-    if (bytes == 0) return "0 Byte";
+    if (bytes == 0) return `0 ${I18N["file_sizes"][0]}`;
     let k = 1024,
         dm = decimals || 2,
-        sizes = ["Byte", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB", "RB", "QB"],
+        sizes = I18N["file_sizes"],
         i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
@@ -34,12 +47,9 @@ export function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-export function formatUnixTime(timestamp, locales = getCookie("locale"), options = { dateStyle: "short", timeStyle: "medium"}) {
+export function formatUnixTime(timestamp, locales = usedLocale,
+                               options = { dateStyle: "short", timeStyle: "short"}) {
     locales = `${locales.substring(0, 2)}-${locales.substring(3)}`;
     timestamp = Number.parseInt(timestamp);
     return new Date(timestamp * 1000).toLocaleString(locales, options);
-}
-
-String.prototype.toLocaleUpperCaseFirst = function(string) {
-    return string.charAt(0).toLocaleUpperCase() + string.slice(1);
 }

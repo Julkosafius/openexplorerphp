@@ -1,9 +1,8 @@
 "use strict";
-import {formatBytes, formatUnixTime, getCookie} from "./globals.js";
+import {I18N, formatBytes, formatUnixTime, getCookie} from "./globals.js";
 import {breadcrumbs, renderBreadcrumbs} from "./folder-functions/breadcrumbs.js";
 import {
     hideOptionWindow,
-    OPTION_WINDOW,
     OPTION_WINDOW_CLOSE,
     OPTION_WINDOW_CONTENT
 } from "./folder-functions/optionWindow.js";
@@ -11,10 +10,6 @@ import {addFile} from "./folder-functions/addFile.js";
 import {addFolder} from "./folder-functions/addFolder.js";
 import {last_sort_direction, last_sort_property, sortByProperty} from "./folder-functions/sortingBtns.js";
 import {executeAction} from "./folder-functions/executeAction.js";
-
-//const rawLangRequest = await fetch(`lang/${getCookie("locale")}.json`);
-//const rawLangRequest = await fetch(`lang/en_US.json`);
-//const lang_json = await rawLangRequest.json();
 
 const DEBUG = true;
 if (!DEBUG) {
@@ -26,36 +21,15 @@ if (!DEBUG) {
 }
 
 export const elementView = document.getElementById("elementView");
-const ADD_FILE_BTN = document.getElementById("addFileBtn");
-const ADD_FOLDER_BTN = document.getElementById("addFolderBtn");
-export const ELEMENT_ACTION_DROPDOWN = document.getElementById("elementAction");
-const ELEMENT_ACTION_BTN = document.getElementById("elementActionBtn");
-const ELEMENT_ACTION_FORM = document.getElementById("elementActionForm");
+const addFileBtn = document.getElementById("addFileBtn");
+const addFolderBtn = document.getElementById("addFolderBtn");
+export const elementActionDropdown = document.getElementById("elementAction");
+const elementActionBtn = document.getElementById("elementActionBtn");
+const elementActionForm = document.getElementById("elementActionForm");
 let backBtn = document.getElementById("backBtn");
 export const selectAll = document.getElementById("selectAll");
-
 export let curr_folder_id = getCookie("folder_id");
 export let folder_contents_json = {};
-
-const colorThemes = document.querySelectorAll('[name="theme"]');
-
-
-const storeTheme = (theme) => {
-    localStorage.setItem("theme", theme);
-};
-const retrieveTheme = () => {
-    const activeTheme = localStorage.getItem("theme");
-    colorThemes.forEach(themeOption => themeOption.checked = themeOption.id === activeTheme);
-};
-const setTheme = () => {
-    if (localStorage.getItem("theme")) {
-        retrieveTheme();
-    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.getElementById("darkTheme").checked = true;
-    } else {
-        document.getElementById("lightTheme").checked = true;
-    }
-}
 
 const toggleChildrenDisabledAttr = (element, disable) => {
     const disableable_types = ["button", "fieldset", "input", "optgroup", "option", "select", "textarea"];
@@ -123,7 +97,7 @@ export async function fetchFolderContents(folder_id, render = true) {
 export function renderFolderContents(curr_folder_contents_json) {
     elementView.innerHTML = "";
     selectAll.checked = false;
-    toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, true);
+    toggleChildrenDisabledAttr(elementActionForm, true);
 
     let parent_folder_id = curr_folder_contents_json['parent_id'];
     let curr_folder_name = curr_folder_contents_json['curr_id'];
@@ -147,16 +121,6 @@ export function renderFolderContents(curr_folder_contents_json) {
     };
     history.pushState({}, "");*/
 
-    if (parent_folder_id) {
-        backBtn = backBtn.cloneNode(true); // remove previous event listeners
-        backBtn.addEventListener("click", async () => {
-            console.log(curr_folder_id);
-            curr_folder_id = parent_folder_id;
-            breadcrumbs.splice(-2);
-            await fetchFolderContents(parent_folder_id);
-        });
-    }
-
     for (let folder of folders) {
         const folderBtn = document.createElement("button");
         const checkboxInput = document.createElement("input");
@@ -178,9 +142,9 @@ export function renderFolderContents(curr_folder_contents_json) {
         checkboxInput.name = "folders";
         checkboxInput.value = folder.folder_id;
 
-        nameSpan.innerHTML = `${DEBUG ? folder.folder_id+'-' : '' }${folder.folder_name}` || "noname";
-        dateSpan.innerHTML = formatUnixTime(folder.folder_time) || "nodate";
-        sizeSpan.innerHTML = folder.folder_size ? formatBytes(folder.folder_size) : "nosize";
+        nameSpan.innerHTML = `${DEBUG ? folder.folder_id+'-' : ''}${folder.folder_name}` || I18N["noname"];
+        dateSpan.innerHTML = formatUnixTime(folder.folder_time) || I18N["nodate"];
+        sizeSpan.innerHTML = formatBytes(folder.folder_size);
     }
 
     for (let file of files) {
@@ -202,15 +166,18 @@ export function renderFolderContents(curr_folder_contents_json) {
         checkboxInput.type = "checkbox";
         checkboxInput.name = "files";
 
-        fileLink.href = `data/${getCookie("user_id")}/${file.file_hash}${file.file_type ? "." : ""}${file.file_type}`;
+        fileLink.href =
+            `data/${getCookie("user_id")}/${file.file_hash}${file.file_type ? "." : ""}${file.file_type}`;
         fileLink.target = "_blank";
 
         fileBtn.name = "file";
 
         checkboxInput.value = file.file_id;
-        nameSpan.innerHTML = `${DEBUG ? file.file_id+'-' : ''}${file.file_name}${file.file_type ? "." : ""}${file.file_type}` || "noname";
-        dateSpan.innerHTML = formatUnixTime(file.file_time) || "nodate";
-        sizeSpan.innerHTML = file.file_size ? formatBytes(file.file_size) : "nosize";
+        nameSpan.innerHTML =
+            `${DEBUG ? file.file_id+'-' : ''}${file.file_name}${file.file_type ? "." : ""}${file.file_type}`
+            || I18N["noname"];
+        dateSpan.innerHTML = formatUnixTime(file.file_time) || I18N["nodate"];
+        sizeSpan.innerHTML = file.file_size ? formatBytes(file.file_size) : I18N["nosize"];
     }
 
     //unlockUIElement(elementView);
@@ -233,28 +200,22 @@ function selectAllElements() {
     if (selectAll.checked) {
         all_checkbox_inputs.forEach(e => e.checked = true);
         if (all_checkbox_inputs.length) {
-            toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, false);
+            toggleChildrenDisabledAttr(elementActionForm, false);
         }
     } else {
         all_checkbox_inputs.forEach(e => e.checked = false);
-        toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, true);
+        toggleChildrenDisabledAttr(elementActionForm, true);
     }
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
     await fetchFolderContents(curr_folder_id);
 
-    ADD_FILE_BTN.addEventListener("click", async () => {await addFile(curr_folder_id)});
-    ADD_FOLDER_BTN.addEventListener("click", async () => {await addFolder(curr_folder_id)});
+    addFileBtn.addEventListener("click", async () => {await addFile(curr_folder_id)});
+    addFolderBtn.addEventListener("click", async () => {await addFolder(curr_folder_id)});
     OPTION_WINDOW_CLOSE.addEventListener("click", hideOptionWindow);
-    ELEMENT_ACTION_BTN.addEventListener("click", executeAction);
+    elementActionBtn.addEventListener("click", executeAction);
     selectAll.addEventListener("change", selectAllElements);
-
-    // retrieve previously set theme from localStorage or set theme by "prefers-color-scheme" (dark/light)
-    setTheme();
-    colorThemes.forEach((themeOption) => {
-        themeOption.addEventListener("click", () => storeTheme(themeOption.id));
-    });
 
     elementView.addEventListener("click", (e) => {
         // check if clicked element could be a checkbox
@@ -262,9 +223,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (checkbox) {
             if (checkbox.checked) {
                 // manage action dropdown disability
-                toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, false);
+                toggleChildrenDisabledAttr(elementActionForm, false);
             } else if (![...elementView.querySelectorAll('input[type=checkbox]:checked')].length) {
-                toggleChildrenDisabledAttr(ELEMENT_ACTION_FORM, true);
+                toggleChildrenDisabledAttr(elementActionForm, true);
                 selectAll.checked = false;
             }
             return;
@@ -275,6 +236,5 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (buttonElement && buttonElement.name === "folder") {
             fetchFolderContents(buttonElement.value);
         }
-
     });
 });

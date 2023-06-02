@@ -1,5 +1,10 @@
 "use strict";
-import { NO_PASSWORD_MATCH, USER_NAME_AVAILABLE, MIN_USER_NAME_LENGTH, MIN_PASSWORD_LENGTH, isAlphaNumeric } from "./globals.js";
+import {
+    NO_PASSWORD_MATCH,
+    MIN_USER_NAME_LENGTH,
+    MIN_PASSWORD_LENGTH,
+    isAlphaNumeric
+} from "./globals.js";
 
 const REGISTER_FORM = document.getElementById("register_form");
 const UNAME_INPUT = document.getElementById("user_name");
@@ -9,8 +14,10 @@ const UN_INFO_P = document.getElementById("user_name_info");
 const PW_INFO_P = document.getElementById("password_info");
 const SUBMIT_BTN = document.getElementById("submit_btn");
 
-const checkUsername = () => UNAME_INPUT.value.trim().length >= MIN_USER_NAME_LENGTH && isAlphaNumeric(UNAME_INPUT.value.trim());
-const checkPassword = () => matchingPasswords() && Math.max(PW1_INPUT.value.length, PW2_INPUT.value.length) >= MIN_PASSWORD_LENGTH;
+const checkUsername = () => UNAME_INPUT.value.trim().length >= MIN_USER_NAME_LENGTH
+    && isAlphaNumeric(UNAME_INPUT.value.trim());
+const checkPassword = () => matchingPasswords()
+    && Math.max(PW1_INPUT.value.length, PW2_INPUT.value.length) >= MIN_PASSWORD_LENGTH;
 
 function matchingPasswords() {
     let pw1 = PW1_INPUT.value;
@@ -50,8 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // check input data via JavaScript BEFORE submit
     SUBMIT_BTN.addEventListener("click", (e) => {
         e.preventDefault();
-        if (checkUsername()
-         && checkPassword()) {
+        if (checkUsername() && checkPassword()) {
             REGISTER_FORM.submit();
         }
     });

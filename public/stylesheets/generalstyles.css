@@ -1,83 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
 :root {
-    --blank: #414547;
-    --darkgreen: #346410;
-    --darkgrey: #18181a;
-    --darkyellow: #695a18;
-    --green: #6ecf22;
-    --red: #bc382d;
-    --round-corners: 0.5em;
-    --yellow: #d8b833;
-    --font-size: 1.2em;
-    --thin: 0.05em;
+    --border-radius: 0.25em;
+    --border-thin: solid var(--text-color) 0.05em;
+    --highlight: white;
+    --font-family: 'Inter', sans-serif;
+    --font-size: 1.125rem;
+}
+
+:root:has(#lightTheme:checked) {
+    --background-color: #F0F0F2;
+    --background-color: lightblue;
+    --highlight: #91abd9;
+    --svg-color: invert(0%);
+    --text-color: #202326;
+}
+
+:root:has(#darkTheme:checked) {
+    --background-color: #202326;
+    --highlight: #555BD9;
+    --svg-color: invert(100%);
+    --text-color: #F0F0F2;
+}
+
+/************/
+/* raw tags */
+/************/
+
+html {
+    color-scheme: light dark;
+}
+
+html:has(#lightTheme:checked) {
+    color-scheme: light;
+}
+
+html:has(#darkTheme:checked) {
+    color-scheme: dark;
 }
 
 body {
+    align-items: center;
     background-color: var(--background-color);
     color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-family);
     font-size: var(--font-size);
-    overflow-y: hidden;
+    height: 100vh;
+    height: 100dvh;
+    justify-content: center;
 }
 
 button,
 input[type=file]::file-selector-button {
     border: none;
-    border-radius: var(--round-corners);
+    border-radius: var(--border-radius);
+    font-family: inherit;
     outline-color: transparent;
+}
+
+button:hover:enabled,
+button:focus,
+input[type=file]::file-selector-button:hover {
+    background-color: var(--highlight);
+}
+
+input[type=checkbox]:enabled {
     cursor: pointer;
 }
 
-/* TODO: button hover doesn't work
-   TODO: scrollbar, else the elements under body overflow disappear
-    */
-
-button:hover:not(:disabled),
-input[type=file]::file-selector-button:hover:not(:disabled) {
-    background-color: var(--highlight-color);
+input[type=text],
+input[type=password] {
+    border: none;
+    border-bottom: var(--border-thin);
 }
 
-button:disabled {
-    cursor: auto;
+progress {
+    text-align: center;
 }
 
-a {
-    color: var(--link-color);
-    cursor: pointer;
+progress:after {
+    content: attr(value)'/'attr(max);
 }
 
-select {
-    border-radius: var(--round-corners);
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 95vh;
+    height: 95dvh;
+    width: min(100ch, 100% - 3rem);
 }
 
-table, td, th {
-    border: solid var(--blank) 0.1em;
+#wrapper header {
+    flex: 0 1 auto;
 }
 
-table {
-    border-collapse: collapse;
+#wrapper main {
+    flex: 1 1 auto;
+    overflow-y: auto;
 }
 
-#download_frame {
-    display: none;
+/*************/
+/* in header */
+/*************/
+
+#elementActionForm {
+    display: inline;
 }
 
-#elementView {
-    height: 50vh;
-    height: 50dvh;
+/**********/
+/* in nav */
+/**********/
+
+nav {
+    font-size: calc(var(--font-size) * 1.2);
+    overflow: hidden;
+    padding: 0.75em;
+    white-space: nowrap;
+}
+
+nav span {
+    cursor: default;
+}
+
+/***********/
+/* in main */
+/***********/
+
+#elementView a {
+    text-decoration: none;
+}
+
+main input[type=checkbox] {
+    place-self: center stretch;
+}
+
+#sortBtns,
+#elementView button {
+    display: grid;
+    gap: 0 calc(var(--font-size) / 2);
+    grid-template-columns: min-content minmax(100px, 4fr) minmax(95px, 1fr) minmax(50px, 1fr);
+    overflow: hidden;
+    padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+}
+
+main button:not(:hover),
+main button:not(:focus) {
+    background-color: transparent;
+}
+
+#sortBtns button,
+#elementView button span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+#sortBtns {
+    background-color: var(--background-color);
+    /*filter: drop-shadow(0 calc(var(--font-size) / 4) 0.75rem rgba(0, 0, 0, 0.5));*/
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 #elementView button {
-    padding: 0.5em;
+    border-radius: 0;
+    border-top: var(--border-thin);
+    text-align: left;
+    width: 100%;
+}
+
+#elementView button[name=folder] :nth-child(2)::before,
+#elementView button[name=file] :nth-child(2)::before {
+    content: "";
+    background-repeat: no-repeat;
+    filter: var(--svg-color);
+    height: 100%;
+    padding-left: 1.75rem;
+    width: 100%;
+}
+
+#elementView button[name=folder] :nth-child(2)::before {
+    background-image: url("../images/folder.svg");
+}
+
+#elementView button[name=file] :nth-child(2)::before {
+    background-image: url("../images/file.svg");
+}
+
+/*#elementView input[type=checkbox] {
+    opacity: 0;
+}
+#elementView input[type=checkbox]:checked,
+#elementView input[type=checkbox]:hover {
+    opacity: 1;
+}*/
+
+/**************/
+/* data modal */
+/**************/
+
+dialog[open] {
+    border-radius: var(--border-radius);
+    display: grid;
+    gap: var(--font-size) 0;
+    grid-template-rows: auto 1fr;
+}
+
+dialog input[type=file] {
+    margin: auto;
+    width: 80%;
+}
+
+dialog:has(form) #optionWindowContent > form {
+    display: grid;
+    gap: 1em 0;
+    grid-template-rows: 1fr auto;
+}
+
+.drop-container {
+    align-items: center;
+    border: var(--border-thin);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 100%;
+    overflow: auto;
+    position: relative;
+    text-align: center;
 }
 
 #optionWindowHeader {
     display: grid;
-    gap: 0 var(--font-size);
+    gap: 0 1em;
     grid-template-columns: 1fr min-content;
-    margin-bottom: var(--font-size);
 }
 
 #optionWindowHeader > button[data-close-modal] {
-    background-color: var(--highlight-color);
+    background-color: #F25E6B;
     background-image: url("../images/x.svg");
     background-size: cover;
     background-repeat: no-repeat;
@@ -94,180 +259,73 @@ table {
     width: 100%;
 }
 
-dialog {
-    border: none;
-    border-radius: var(--round-corners);
-    max-width: 90%;
+#optionWindowContent > ol {
+    padding-left: var(--font-size);
 }
 
-dialog input[type=text] {
-    border: none;
-    border-bottom: solid var(--thin);
-}
+/* Folder selection tree */
 
-dialog input[type=file] {
-    padding: calc(var(--font-size) / 2);
-    border-radius: var(--round-corners);
-    border: solid var(--thin);
-    max-width: 80%;
+dialog:has(#treeView) {
+    height: 40vh;
+    height: 40dvh;
+    width: min(50ch, 100% - 7rem);
 }
-
-input[type=file]::file-selector-button {
-    margin-right: var(--font-size);
-}
-
-.drop-container {
-    align-items: center;
-    border: dashed var(--thin);
-    border-radius: var(--round-corners);
-    cursor: pointer;
-    display: flex;
-    gap: calc(var(--font-size) / 2);
-    flex-direction: column;
-    justify-content: center;
-    max-width: 100%;
-    position: relative;
-}
-
-.folder,
-.file {
-    display: flex;
-    flex-wrap: nowrap;
-}
-
-.file > a {
-    text-decoration: none;
-    width: 100%;
-}
-
-#sortBtns {
+dialog:has(#treeView) #optionWindowContent {
     display: grid;
-    gap: 0 calc(var(--font-size) / 2);
-    grid-template-columns: min-content minmax(10px, 4fr) minmax(95px, 1fr) minmax(50px, 1fr);
+    gap: 1em 0;
+    grid-template-rows: 1fr auto;
+    overflow: auto;
 }
-
-button[name=folder],
-button[name=file] {
+#optionWindowContent #treeView {
+    overflow: auto;
+}
+#optionWindowContent #treeView button {
     background-color: transparent;
-    border-top: solid var(--text-color) var(--thin);
-    border-radius: 0;
-    color: var(--text-color);
+}
+#optionWindowContent #treeView li {
+    list-style-type: none;
+}
+#optionWindowContent #treeView span {
+    border-bottom: var(--border-thin);
     display: grid;
-    gap: 0 calc(var(--font-size) / 2);
-    grid-template-columns: min-content minmax(10px, 4fr) minmax(95px, 1fr) minmax(50px, 1fr);
-    overflow: hidden;
+    grid-template-columns: auto 1fr;
+}
+#optionWindowContent #treeView > ul {
+    padding: 0;
+}
+#optionWindowContent #treeView .selected {
+    background-color: var(--highlight);
+}
+
+/**************/
+/* login_form */
+/**************/
+
+#register_form,
+#login_form {
+    display: grid;
+    grid-template-rows: auto;
+}
+
+#register_form > *,
+#login_form > * {
     width: 100%;
 }
 
-button[name=folder]:hover,
-button[name=file]:hover {
-    background-color: var(--highlight-color);
-}
+/************************/
+/* multipurpose classes */
+/************************/
 
-button[name=folder]:before {
-    content: url("../images/folder.svg");
-    filter: var(--svg-color);
-}
-
-button[name=file]:before {
-    content: url("../images/file.svg");
-    filter: var(--svg-color);
-}
-
-#sortBtns > button,
-button[name=folder] > span,
-button[name=file] > span {
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    position: absolute;
     white-space: nowrap;
-}
-
-#sortBtns > button {
-    place-self: center stretch;
-}
-
-button[name=folder] > span,
-button[name=file] > span {
-    place-self: center start;
-}
-
-@media (width <= 400px) {
-    #sortBtns,
-    button[name=folder],
-    button[name=file] {
-        grid-template-columns: min-content 1fr;
-    }
-    #sortBtns > button:nth-child(n+3),
-    button[name=folder] > span:nth-child(n+2),
-    button[name=file] > span:nth-child(n+2) {
-        display: none;
-    }
-}
-
-
-
-button[name=folder] > span:first-child,
-button[name=file] > span:first-child {
-    place-self: center start;
-}
-
-button[name=folder]:before,
-button[name=file]:before {
-    display: inline-block;
-    height: calc(var(--font-size) - 0.2em);
-    width: calc(var(--font-size) - 0.2em);
-}
-
-input[type=checkbox] {
-    cursor: pointer;
+    width: 1px;
 }
 
 .lockUI {
-    background-color: #ffffffcc;
-    display: grid;
-    height: 100%;
-    place-items: center;
-    position: absolute;
-    width: 100%;
-    z-index: 8;
-}
 
-.lockUI > * {
-    height: inherit;
-    max-height: 5em;
-    pointer-events: none;
-    position: absolute;
-}
-
-#tree_view .selected {
-    background-color: red;
-    color: blue;
-}
-
-li span {
-    background-color: green;
-}
-
-#optionWindowContent {
-    text-align: left;
-}
-
-progress {
-    text-align: center;
-}
-progress:after {
-    content: attr(value)'/'attr(max);
-}
-
-#toggleThemeBtn:before {
-    background-image: url("../images/theme.svg");
-}
-
-.icon-before:before {
-    content: " ";
-    background-size: cover;
-    display: inline-block;
-    height: 0.9em;
-    width: 0.9em
 }

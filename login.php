@@ -2,7 +2,7 @@
 require 'app/globals.php';
 require 'app/utilities.php';
 
-global $salt, $sqlite, $lang;
+global $salt, $sqlite, $I18N;
 
 function doesLoginDataExist($user_name, $password) {
     global $sqlite, $salt;
@@ -18,7 +18,7 @@ if (isset($_POST['username'])) {
     $password = trim($_POST['current-password']);
 
     if (!doesLoginDataExist($user_name, $password)) {
-        $loginResponse = USER_NAME_OR_PASSWORD_WRONG;
+        $loginResponse = $I18N['username_or_password_wrong'];
     } else {
         $new_user_id = $sqlite->getFirstColumnValue('select user_id as uid from users where user_name like "'.$user_name.'" and password like "'.mySHA256($password, $salt, 10000).'"', 'uid');
         // save the current (last) login time, ip and place
@@ -35,24 +35,37 @@ if (isset($_POST['username'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= ucwords($lang['login']) ?></title>
+    <title><?= ucfirst($I18N['login']) ?></title>
     <link rel="stylesheet" href="public/stylesheets/normalize.css" type="text/css">
-    <link rel="stylesheet" href="public/stylesheets/generalstyles-new.css" type="text/css">
+    <link rel="stylesheet" href="public/stylesheets/generalstyles.css" type="text/css">
     <link rel="shortcut icon" href="public/images/favico/favico_r.ico" type="image/x-icon">
 </head>
 <body>
-    <h1><?= ucwords($lang['login']) ?>!</h1>
+    <form action="" class="visually-hidden">
+        <label for="lightTheme">Light Theme</label>
+        <input type="radio" id="lightTheme" name="theme">
+        <label for="darkTheme">Dark Theme</label>
+        <input type="radio" id="darkTheme" name="theme">
+    </form>
+
+    <h1><?= ucfirst($I18N['login']) ?>!</h1>
     <form id="login_form" method="post">
-        <label for="user_name"><?= ucwords($lang['user_name']) ?>:</label>
+        <label for="user_name"><?= ucfirst($I18N['username']) ?>:</label>
         <input id="user_name" name="username" type="text" maxlength="255"
                required="required" autocomplete="username" autofocus>
-        <label for="password"><?= ucwords($lang['password']) ?>:</label>
+        <label for="password"><?= ucfirst($I18N['password']) ?>:</label>
         <input id="password" name="current-password" type="password"
                required="required" autocomplete="current-password">
         <p id="info"><?= trim($loginResponse) ?></p>
-        <button id="submit_btn" type="submit"><?= ucwords($lang['login']) ?></button>
+        <button id="submit_btn" type="submit"><?= ucfirst($I18N['login']) ?></button>
     </form>
+    <p>
+        <small><?= ucfirst($I18N['register_msg']) ?>
+            <a href="register.php"><?= ucfirst($I18N['register']) ?>!</a>
+        </small>
+    </p>
 
+    <script src="public/javascripts/theme.js" type="module"></script>
     <script src="public/javascripts/login.js" type="module"></script>
 </body>
 </html>

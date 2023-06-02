@@ -34,7 +34,7 @@ export async function addFile(destination_folder) {
                 let file_data = new FormData();
                 file_data.append("file", FILE_UPLOAD_INPUT.files[i]);
                 file_data.append("destination_folder", destination_folder);
-                const rawUploadResponse = await fetch("fileupload_single.php", {
+                const rawUploadResponse = await fetch("fileupload.php", {
                     method: "POST",
                     body: file_data
                 });

@@ -1,4 +1,5 @@
 <?php
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath( $_SERVER['SCRIPT_FILENAME'])) {
     header('Location: error.php', true, 403);
     die();
@@ -7,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath( $_SER
 require 'app/globals.php';
 require 'app/utilities.php';
 
+global $I18N;
 global $sqlite; // inherits database connection from utilities
 
 $status_array = [];
@@ -16,7 +18,7 @@ $files = isset($_POST['files']) ? $_POST['files'] : null;
 $folders = isset($_POST['folders']) ? $_POST['folders'] : null;
 
 if (!$destination) {
-    $status_array[] = 'No destination folder found.';
+    $status_array[] = $I18N['error_no_destination'];
     echo json_encode($status_array);
     die();
 }
@@ -27,9 +29,9 @@ $destination_name = $sqlite->getFirstColumnValue('select folder_name as fn from 
 if (!empty($folders)) {
     foreach ($folders as $folder_id) {
         if (!isIdValid($folder_id, 'folders')) {
-            $status_array[] = 'Could not move '.$folder_id.': folder does not exist.';
+            $status_array[] = $I18N['move_fail'].': '.$folder_id.' – '.$I18N['error_not_found'];
         } elseif (!isPropertyOfUser($folder_id, 'folders')) {
-            $status_array[] = 'Could not move '.$folder_id.': no permission.';
+            $status_array[] = $I18N['move_fail'].': '.$folder_id.' – '.$I18N['error_no_permission'];
         } else {
             $folder_info = getInfo($folder_id, 'folders');
             $folder_name = $folder_info['folder_name'];
@@ -48,20 +50,21 @@ if (!empty($folders)) {
                                                                        from folders where rowid = '.$current_folder_id,
                                                             'pf_id')) {
                 if ($current_folder_id == $folder_id) {
-                    $status_array[] = 'Could not move '.$folder_name.' to '.$destination_name.
-                                        ': cannot move a folder into a sub-folder of itself.';
+                    $status_array[] = $I18N['move_fail'].': '.$folder_name.' -> '.$destination_name.
+                        ' – '.$I18N['move_fail_inside_itself'];
                     echo json_encode($status_array);
                     die();
                 }
             }
 
             if ($folder_id == $destination) {
-                $status_array[] = 'Could not move '.$folder_name.' to '.$destination_name.': it is the same folder.';
+                $status_array[] = $I18N['move_fail'].': '.$folder_name.' -> '.$destination_name.
+                    ' – '.$I18N['move_fail_same_folder'];
             } else {
                 updateFolderSize($old_parent_folder, $folder_size, '-');
                 updateFolderSize($destination, $folder_size, '+');
                 $sqlite->executeCommands('update folders set parent_folder_id = '.$destination.'where rowid ='.$folder_id);
-                $status_array[] = 'Moved '.$folder_name.' to '.$destination_name.'.';
+                $status_array[] = $I18N['move_ok'].': '.$folder_name.' -> '.$destination_name;
             }
         }
     }
@@ -70,9 +73,9 @@ if (!empty($folders)) {
 if (!empty($files)) {
     foreach ($files as $file_id) {
         if (!isIdValid($file_id, 'files')) {
-            $status_array[] = 'Could not move '.$file_id.': file does not exist.';
+            $status_array[] = $I18N['move_fail'].': '.$file_id.' – '.$I18N['error_not_found'];
         } elseif (!isPropertyOfUser($file_id, 'files')) {
-            $status_array[] = 'Could not move '.$file_id.': no permission.';
+            $status_array[] = $I18N['move_fail'].': '.$file_id.' – '.$I18N['error_no_permission'];
         } else {
             $file_info = $sqlite->getIterator('select file_name, file_type, file_size, folder_id from files
                                                   where rowid = '.$file_id)->fetch();
@@ -86,7 +89,7 @@ if (!empty($files)) {
             updateFolderSize($destination, $file_size, '+');
 
             $sqlite->executeCommands('update files set folder_id = '.$destination.' where rowid ='.$file_id);
-            $status_array[] = 'Moved '.$file_name.$file_type.' to '.$destination_name.'.';
+            $status_array[] = $I18N['move_ok'].': '.$file_name.$file_type.' -> '.$destination_name;
         }
     }
 }

@@ -3,9 +3,10 @@ require 'app/globals.php';
 require 'app/utilities.php';
 
 global $sqlite; // inherits database connection from utilities
+global $I18N;
 
 function copyFile($file_id, $parent_folder_id = 0) {
-    global $sqlite, $destination, $status_array, $destination_name;
+    global $sqlite, $destination, $status_array, $destination_name, $I18N;
     $file_info = getInfo($file_id, 'files');
     $folder_id = empty($parent_folder_id) ? $destination : $parent_folder_id;
     $sqlite->executeCommands('insert into files(file_name, file_type, file_size, file_time, file_hash, folder_id) '
@@ -17,11 +18,12 @@ function copyFile($file_id, $parent_folder_id = 0) {
                             .$file_info['file_hash'].'", '
                             .$folder_id
                             .')');
-    $status_array[] = 'Copied file '.$file_info['file_name'].'.'.$file_info['file_type'].' to '.$destination_name.'.';
+    $status_array[] = $I18N['copy_ok'].': '.$file_info['file_name'].'.'.$file_info['file_type']
+                        .' -> '.$destination_name;
 }
 
 function copyFolder($folder_id, $last_folder_id = 0) {
-    global $sqlite, $destination, $status_array;
+    global $sqlite, $destination, $status_array, $I18N;
     $folder_contents = getFolderContents($folder_id);
     // the contents of the original folder
     $elements = array_merge($folder_contents['folders'], $folder_contents['files']);
@@ -42,10 +44,10 @@ function copyFolder($folder_id, $last_folder_id = 0) {
                 // from the original folder to the new one
                 $new_last_folder_id = $sqlite->getFirstColumnValue('select max(rowid) as id from folders where parent_folder_id ='.$parent_folder_id, 'id');
                 if (!empty($new_last_folder_id)) {
-                    $status_array[] = 'Copied folder '.$folder_info['folder_name'].'.';
-                    $subfolder_contents = copyFolder($elements[$i]['folder_id'], $new_last_folder_id);
+                    $status_array[] = $I18N['copy_ok'].': '.$folder_info['folder_name'];
+                    //$subfolder_contents = copyFolder($elements[$i]['folder_id'], $new_last_folder_id);
                 } else {
-                    $status_array[] = 'Could not copy '.$folder_info['folder_name'].'.';
+                    $status_array[] = $I18N['copy_fail'].': '.$folder_info['folder_name'];
                 }
 
             } else {
@@ -62,7 +64,7 @@ $files = isset($_POST['files']) ? $_POST['files'] : null;
 $folders = isset($_POST['folders']) ? $_POST['folders'] : null;
 
 if (!$destination) {
-    $status_array[] = 'No destination folder found.';
+    $status_array[] = $I18N['error_no_destination'];
     echo json_encode($status_array);
     die();
 }

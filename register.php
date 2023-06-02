@@ -6,7 +6,7 @@ use App\SQLiteUtilities;
 require 'app/globals.php';
 require 'app/utilities.php';
 
-global $sqlite, $lang;
+global $sqlite, $I18N;
 
 function insertUser($user_name, $tmp) {
     global $salt, $sqlite;
@@ -35,7 +35,7 @@ $usernameResponse = "";
 $passwordResponse = "";
 
 $checkUsername = function($user_name) {
-    global $usernameResponse;
+    global $usernameResponse, $I18N;
 
     $sqlite = new SQLiteUtilities((new SQLiteConnection())->connect());
     $user_name_count = $sqlite->getFirstColumnValue('select count(*) as count from users where user_name = "'.$user_name.'"', 'count');
@@ -44,21 +44,21 @@ $checkUsername = function($user_name) {
     $isLongEnough = strlen($user_name) >= MIN_USER_NAME_LENGTH;
     $isAlphaNumeric = ctype_alnum($user_name);
 
-    if (!$isNotTaken) $usernameResponse .= USER_NAME_TAKEN;
-    if (!$isLongEnough) $usernameResponse .= ' '.USER_NAME_TOO_SHORT;
-    if (!$isAlphaNumeric) $usernameResponse .= ' '.USER_NAME_ILLEGAL;
+    if (!$isNotTaken) $usernameResponse .= $I18N['username_taken'];
+    if (!$isLongEnough) $usernameResponse .= '; '.$I18N['username_too_short'];
+    if (!$isAlphaNumeric) $usernameResponse .= '; '.$I18N['username_illegal'];
 
     return $isNotTaken && $isLongEnough && $isAlphaNumeric;
 };
 
 $checkPasswords = function($pw1, $pw2) {
-    global $passwordResponse;
+    global $passwordResponse, $I18N;
 
     $areMatching = strcmp($pw1, $pw2) === 0;
     $isLongEnough = max(strlen($pw1), strlen($pw2)) >= MIN_PASSWORD_LENGTH;
 
-    if (!$areMatching) $passwordResponse .= NO_PASSWORD_MATCH;
-    if (!$isLongEnough) $passwordResponse .= ' '.PASSWORD_TOO_SHORT;
+    if (!$areMatching) $passwordResponse .= $I18N["password_nomatch"];
+    if (!$isLongEnough) $passwordResponse .= '; '.$I18N["password_too_short"];
 
     return $areMatching && $isLongEnough;
 };
@@ -87,26 +87,39 @@ if (isset($_POST['username'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= ucwords($lang['register']) ?></title>
+    <title><?= ucfirst($I18N['register']) ?></title>
     <link rel="stylesheet" href="public/stylesheets/normalize.css" type="text/css">
     <link rel="stylesheet" href="public/stylesheets/generalstyles.css" type="text/css">
     <link rel="shortcut icon" href="public/images/favico/favico_r.ico" type="image/x-icon">
 </head>
 <body>
-    <h1><?= ucwords($lang['register']) ?>!</h1>
+    <form action="" class="visually-hidden">
+        <label for="lightTheme">Light Theme</label>
+        <input type="radio" id="lightTheme" name="theme">
+        <label for="darkTheme">Dark Theme</label>
+        <input type="radio" id="darkTheme" name="theme">
+    </form>
+
+    <h1><?= ucfirst($I18N['register']) ?>!</h1>
     <form id="register_form" method="post">
-        <label for="user_name"><?= ucwords($lang['user_name']) ?>:</label>
+        <label for="user_name"><?= ucfirst($I18N['username']) ?>:</label>
         <input id="user_name" name="username" type="text" maxlength="255"
                required="required" autocomplete="username" autofocus>
-        <label for="password1"><?= ucwords($lang['password']) ?>:</label>
+        <label for="password1"><?= ucfirst($I18N['password']) ?>:</label>
         <input id="password1" name="new-password" type="password" required="required" autocomplete="new-password">
-        <label for="password2"><?= ucfirst($lang['retype_password']) ?>:</label>
+        <label for="password2"><?= ucfirst($I18N['password_retype']) ?>:</label>
         <input id="password2" name="password2" type="password" required="required" autocomplete="new-password">
         <p id="user_name_info"><?= trim($usernameResponse) ?></p>
         <p id="password_info"><?= trim($passwordResponse) ?></p>
-        <button id="submit_btn" type="submit"><?= ucwords($lang['register']) ?></button>
+        <button id="submit_btn" type="submit"><?= ucfirst($I18N['register']) ?></button>
     </form>
+    <p>
+        <small><?= ucfirst($I18N['login_msg']) ?>
+            <a href="login.php"><?= ucfirst($I18N['login']) ?></a>
+        </small>
+    </p>
 
+    <script src="public/javascripts/theme.js" type="module"></script>
     <script src="public/javascripts/register.js" type="module"></script>
 </body>
 </html>

@@ -60,7 +60,6 @@ function updateFolderSize($folder_id, $size, $operation = '+') {
             if ($new_folder_size > INTEGER_MAX_VALUE) {
                 // restore original folder size and delete the file
                 $sqlite->executeCommands('update folders set folder_size = '.$OG_folder_size.' where rowid = '.$current_folder_id);
-                unlink($location);
                 die();
             }
 
@@ -165,8 +164,8 @@ function getFolderContents($folder_id) {
         $folders[] = [
             'folder_id' => $row['rowid'],
             'folder_name' => escape($row['folder_name']),
-            'folder_time' => escape($row['folder_time']),
-            'folder_size' => escape($row['folder_size']),
+            'folder_time' => (int)escape($row['folder_time']),
+            'folder_size' => (int)escape($row['folder_size']),
             'parent_folder_id' => $row['parent_folder_id']
         ];
     }
@@ -174,8 +173,8 @@ function getFolderContents($folder_id) {
         $files[] = [
             'file_id' => $row['rowid'],
             'file_name' => escape($row['file_name']),
-            'file_time' => escape($row['file_time']),
-            'file_size' => escape($row['file_size']),
+            'file_time' => (int)escape($row['file_time']),
+            'file_size' => (int)escape($row['file_size']),
             'file_type' => escape($row['file_type']),
             'file_hash' => escape($row['file_hash'])
         ];

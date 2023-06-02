@@ -25,16 +25,15 @@ export let last_sort_direction = false; // true = small to big, false = big to s
  * arr.sort(sortByProperty("age", "desc")); // Sorts by age in descending order
  */
 export function sortByProperty(property, order = "asc") {
-    const sortOrder = order === "desc" ? -1 : 1;
+    const sortOrder = order === "asc" ? 1 : -1;
     return (a, b) => {
         if (a[property] === b[property]) {
             const secondary_property = a.hasOwnProperty("folder_name") ? "folder_name" : "file_name";
             return a[secondary_property].toLowerCase().localeCompare(b[secondary_property].toLowerCase()) * sortOrder;
         } else if (typeof a[property] === "string") {
             return a[property].toLowerCase().localeCompare(b[property].toLowerCase()) * sortOrder;
-        } else {
-            return (a[property] - b[property]) * sortOrder;
         }
+        return (a[property] - b[property]) * sortOrder;
     };
 }
 

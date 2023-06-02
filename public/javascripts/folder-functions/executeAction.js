@@ -2,19 +2,19 @@ import {hideOptionWindow, OPTION_WINDOW, OPTION_WINDOW_CONTENT, showOptionWindow
 import {
     curr_folder_id,
     folder_contents_json,
-    ELEMENT_ACTION_DROPDOWN,
+    elementActionDropdown,
     elementView,
     fetchFolderContents,
     renderResponseStatus
 } from "../folder.js";
-import {getCookie} from "../globals.js";
+import {getCookie, I18N} from "../globals.js";
 
 const ACTIONS = ["rm", "mv", "cp", "zip"];
 const ROOT_FOLDER_ID = getCookie("folder_id");
 
 export async function executeAction(e) {
     e.preventDefault();
-    let action = ELEMENT_ACTION_DROPDOWN.value;
+    let action = elementActionDropdown.value;
     if (action) {
         /**
          * get grouped_elements_json object of all checked elements like so
@@ -44,15 +44,15 @@ export async function executeAction(e) {
 
         switch (action) {
             case ACTIONS[0]: // remove
-                showOptionWindow("Delete?");
+                showOptionWindow(I18N["delete_ask"]);
 
                 // TODO: bug that it sometimes deletes only part of the selected files
 
                 // Confirmation dialogue
                 const DELETE_QUESTION_P = document.createElement("p");
                 const DELETE_BTN = document.createElement("button");
-                DELETE_QUESTION_P.textContent = "Do you really want to delete the selected element(s)?";
-                DELETE_BTN.textContent = "Delete";
+                DELETE_QUESTION_P.textContent = I18N["delete_confirmation"];
+                DELETE_BTN.textContent = I18N["delete"];
                 OPTION_WINDOW_CONTENT.innerHTML = "";
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_QUESTION_P);
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_BTN);
@@ -72,7 +72,7 @@ export async function executeAction(e) {
                 break;
 
             case ACTIONS[1]: // move
-                showOptionWindow("Move where?");
+                showOptionWindow(I18N["move_ask"]);
                 OPTION_WINDOW_CONTENT.innerHTML = "";
                 let move_destination = await selectDestinationFolder();
                 requestBody.append("destination", move_destination.toString());
@@ -91,7 +91,7 @@ export async function executeAction(e) {
                 break;
 
             case ACTIONS[2]: // copy
-                showOptionWindow("Copy to where?");
+                showOptionWindow(I18N["copy_ask"]);
                 OPTION_WINDOW_CONTENT.innerHTML = "";
                 let copy_destination = await selectDestinationFolder();
                 requestBody.append("destination", copy_destination.toString());
@@ -145,7 +145,7 @@ function selectDestinationFolder() {
         const SUBMIT_BTN = document.createElement("button");
 
         TREE_VIEW.id = "treeView";
-        SUBMIT_BTN.textContent = "Select Folder";
+        SUBMIT_BTN.textContent = I18N["folder_select"];
         SUBMIT_BTN.addEventListener("click", (e) => {
             e.preventDefault();
             resolve(selected_folder_id);
@@ -165,8 +165,8 @@ function selectDestinationFolder() {
          * are going to be appended as &lt;li&gt;.
          */
         async function generateFolderList(folder_id, parent_node) {
-            const TOGGLE_OPENED = "v";
-            const TOGGLE_CLOSED = ">";
+            const TOGGLE_OPENED = "↓";
+            const TOGGLE_CLOSED = "->";
             const toggleListElement = (element) => {
                 if (element) {
                     element.style.display = element.style.display === "none" ? "list-item" : "none";
