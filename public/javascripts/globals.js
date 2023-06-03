@@ -1,12 +1,17 @@
 "use strict";
 import i18n from "../../lang/i18n.json" assert { type: "json" };
-// Another possible solution to implement: dynamic imports
+// Not usable in Firefox, because import assertions aren't supported (yet, hopefully)
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1668330
+// Alternative would be: import {i18n} from "../../lang/i18n.JS";
+// with i18n.js: export const i18n = { ... };
+// -----
+// Another possible solution to implement: dynamic imports (supported by Firefox)
 // const lang_json = await import(`../../lang/${getCookie("locale")}.json`, {
 //     assert: { type: 'json' }
 // });
 // console.log(lang_json.default);
 
-const localeCookie = getCookie("locale");
+const localeCookie = getCookie("locale") ? getCookie("locale") : navigator.language.replace('-', '_');
 
 const usedLocale = i18n[localeCookie] ? localeCookie : "en_US";
 export const I18N = Object.freeze(i18n[usedLocale]);
@@ -49,7 +54,7 @@ export function getCookie(name) {
 
 export function formatUnixTime(timestamp, locales = usedLocale,
                                options = { dateStyle: "short", timeStyle: "short"}) {
-    locales = `${locales.substring(0, 2)}-${locales.substring(3)}`;
+    locales = locales.replace('_', '-');
     timestamp = Number.parseInt(timestamp);
     return new Date(timestamp * 1000).toLocaleString(locales, options);
 }

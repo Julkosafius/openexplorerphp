@@ -1,12 +1,13 @@
 "use strict";
 import {OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
 import {fetchFolderContents} from "../folder.js";
+import {I18N} from "../globals.js";
 
 export async function addFolder(destination_folder) {
-    showOptionWindow("Create a folder");
+    showOptionWindow(I18N['folder_create']);
 
     // get text input from
-    const rawResponse = await fetch("public/included_html/addFolderForm.html", {
+    const rawResponse = await fetch("public/included_html/addFolderForm.php", {
         method: "POST",
         headers: {
             "Accept": "text/html"

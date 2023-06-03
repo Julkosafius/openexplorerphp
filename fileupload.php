@@ -48,14 +48,18 @@ if (!$status_message) {
 
         // check data integrity
         if (strlen($file_name) > MAX_FILE_NAME_LEN) {
-            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.' – '.$I18N['error_name_too_long'];
+            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.
+                ' – '.$I18N['error_name_too_long'];
         } elseif ($file_size >= INTEGER_MAX_VALUE) {
-            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.' – '.$I18N['file_upload_fail_too_large_folder'];
+            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.
+                ' – '.$I18N['file_upload_fail_too_large_folder'];
         } elseif (!in_array($mime_info->file($file['tmp_name']), $allowed_file_types)) {
-            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.' – '.$I18N['file_upload_fail_bad_type'];
+            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.
+                ' – '.$I18N['file_upload_fail_bad_type'];
         } elseif (!move_uploaded_file($file['tmp_name'], $location)) {
             // No error suppression so we can see the underlying error.
-            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.' – '.$I18N['file_upload_fail_permissions'];
+            $status_message = $I18N["file_upload_fail"].': '.$file_name.'.'.$file_type.
+                ' – '.$I18N['file_upload_fail_permissions'];
         } else {
             $status_message = $I18N["file_upload_ok"].': '.$file_name.'.'.$file_type;
 

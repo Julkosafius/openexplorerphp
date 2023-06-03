@@ -2,7 +2,7 @@
 
 // inherits utilities.php ($sqlite) from index.php
 
-global $sqlite, $I18N;
+global $sqlite, $usedLocale, $I18N;
 
 if (!isset($_COOKIE['user_id'])) {
     redirect('login.php');
@@ -13,7 +13,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= substr($usedLocale, 0, 2) ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,12 +37,7 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 
     <div id="wrapper">
         <header>
-            <form action="">
-                <label for="lightTheme">Light Theme</label>
-                <input type="radio" id="lightTheme" name="theme">
-                <label for="darkTheme">Dark Theme</label>
-                <input type="radio" id="darkTheme" name="theme">
-            </form>
+
 
             <button id="addFileBtn"><?= ucfirst($I18N['file_upload']) ?></button>
             <button id="addFolderBtn"><?= ucfirst($I18N['folder_create']) ?></button>
@@ -58,10 +53,12 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
                 </select>
                 <button id="elementActionBtn" disabled="disabled"><?= ucfirst($I18N['go']) ?>!</button>
             </form>
+
+            <button id="settingsBtn"><?= $I18N['settings'] ?></button>
         </header>
 
         <nav>
-            <div id="breadcrumbs"></div>
+            <div id="breadcrumbs" class="growFromLeft"></div>
         </nav>
 
         <main>

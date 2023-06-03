@@ -3,12 +3,17 @@
 :root {
     --border-radius: 0.25em;
     --border-thin: solid var(--text-color) 0.05em;
-    --highlight: white;
     --font-family: 'Inter', sans-serif;
     --font-size: 1.125rem;
 }
 
+/*
+ Firefox :has() bugs:
+ https://connect.mozilla.org/t5/discussions/when-is-has-css-selector-going-to-be-fully-implemented-in/td-p/23794
+*/
+.lightTheme,
 :root:has(#lightTheme:checked) {
+    color-scheme: light;
     --background-color: #F0F0F2;
     --background-color: lightblue;
     --highlight: #91abd9;
@@ -16,7 +21,9 @@
     --text-color: #202326;
 }
 
+.darkTheme,
 :root:has(#darkTheme:checked) {
+    color-scheme: dark;
     --background-color: #202326;
     --highlight: #555BD9;
     --svg-color: invert(100%);
@@ -29,14 +36,6 @@
 
 html {
     color-scheme: light dark;
-}
-
-html:has(#lightTheme:checked) {
-    color-scheme: light;
-}
-
-html:has(#darkTheme:checked) {
-    color-scheme: dark;
 }
 
 body {
@@ -76,6 +75,13 @@ input[type=password] {
     border-bottom: var(--border-thin);
 }
 
+fieldset {
+    border-radius: var(--border-radius);
+}
+fieldset select {
+    width: 100%;
+}
+
 progress {
     text-align: center;
 }
@@ -113,15 +119,32 @@ progress:after {
 /* in nav */
 /**********/
 
-nav {
+#breadcrumbs {
+    display: flex;
     font-size: calc(var(--font-size) * 1.2);
+    gap: calc(var(--font-size) / 2);
     overflow: hidden;
     padding: 0.75em;
     white-space: nowrap;
 }
 
-nav span {
+#breadcrumbs span {
     cursor: default;
+}
+#breadcrumbs button {
+    max-width: 75%;
+}
+
+#breadcrumbs button div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.growFromLeft {
+    justify-content: start;
+}
+
+.growFromRight {
+    justify-content: end;
 }
 
 /***********/
@@ -173,8 +196,11 @@ main button:not(:focus) {
     width: 100%;
 }
 
-#elementView button[name=folder] :nth-child(2)::before,
-#elementView button[name=file] :nth-child(2)::before {
+#elementView button span:last-of-type {
+    text-align: right;
+}
+
+#elementView button :nth-child(2)::before {
     content: "";
     background-repeat: no-repeat;
     filter: var(--svg-color);
@@ -257,6 +283,10 @@ dialog:has(form) #optionWindowContent > form {
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
+}
+
+#optionWindowContent {
+    overflow: auto;
 }
 
 #optionWindowContent > ol {

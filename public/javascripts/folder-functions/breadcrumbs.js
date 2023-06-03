@@ -7,15 +7,17 @@ export let breadcrumbs = [];
 export function renderBreadcrumbs() {
     BREADCRUMBS.innerHTML = "";
 
-    for (let i = breadcrumbs.length-1; i >= 0; i--) {
-        let crumb = breadcrumbs[i];
-        let separator = document.createElement("span");
+    for (let crumb of breadcrumbs) {
+        const separator = document.createElement("span");
         separator.innerHTML = " &#10093; ";
 
-        let new_crumb = document.createElement("button");
-        new_crumb.textContent = crumb.folder_name === "root" ? I18N["root"] : crumb.folder_name;
+        const newCrumb = document.createElement("button");
+        const newCrumbText = document.createElement("div");
+        newCrumb.appendChild(newCrumbText);
 
-        new_crumb.addEventListener("click", async () => {
+        newCrumbText.textContent = crumb.folder_name === "root" ? I18N["root"] : crumb.folder_name;
+
+        newCrumb.addEventListener("click", async () => {
             let crumb_end = breadcrumbs.findIndex((other_crumb) => other_crumb.folder_id === crumb.folder_id);
             if (crumb_end !== breadcrumbs.length - 1) { // don't reload if it's the last crumb (i.e. the current folder)
                 breadcrumbs.splice(crumb_end, breadcrumbs.length); // cut off all breadcrumbs after this clicked breadcrumb
@@ -23,9 +25,19 @@ export function renderBreadcrumbs() {
             }
         });
 
-        BREADCRUMBS.appendChild(new_crumb);
+        BREADCRUMBS.appendChild(newCrumb);
         BREADCRUMBS.appendChild(separator);
     }
 
     BREADCRUMBS.removeChild(BREADCRUMBS.lastChild);
+
+    BREADCRUMBS.className = isOverflown(BREADCRUMBS) ? "growFromRight" : "growFromLeft";
+}
+
+const isOverflown = (element) => {
+    let size = 0;
+    for (let child of element.children) {
+        size += child.clientWidth;
+    }
+    return size > element.clientWidth-50;
 }

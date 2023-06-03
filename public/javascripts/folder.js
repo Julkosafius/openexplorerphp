@@ -10,6 +10,7 @@ import {addFile} from "./folder-functions/addFile.js";
 import {addFolder} from "./folder-functions/addFolder.js";
 import {last_sort_direction, last_sort_property, sortByProperty} from "./folder-functions/sortingBtns.js";
 import {executeAction} from "./folder-functions/executeAction.js";
+import {manageSettings} from "./folder-functions/settings.js";
 
 const DEBUG = true;
 if (!DEBUG) {
@@ -26,7 +27,8 @@ const addFolderBtn = document.getElementById("addFolderBtn");
 export const elementActionDropdown = document.getElementById("elementAction");
 const elementActionBtn = document.getElementById("elementActionBtn");
 const elementActionForm = document.getElementById("elementActionForm");
-let backBtn = document.getElementById("backBtn");
+const settingsBtn = document.getElementById("settingsBtn");
+
 export const selectAll = document.getElementById("selectAll");
 export let curr_folder_id = getCookie("folder_id");
 export let folder_contents_json = {};
@@ -216,6 +218,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     OPTION_WINDOW_CLOSE.addEventListener("click", hideOptionWindow);
     elementActionBtn.addEventListener("click", executeAction);
     selectAll.addEventListener("change", selectAllElements);
+    settingsBtn.addEventListener("click", manageSettings);
 
     elementView.addEventListener("click", (e) => {
         // check if clicked element could be a checkbox

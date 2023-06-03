@@ -1,4 +1,4 @@
-import {hideOptionWindow, OPTION_WINDOW, OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
+import {hideOptionWindow, OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
 import {
     curr_folder_id,
     folder_contents_json,
@@ -46,9 +46,7 @@ export async function executeAction(e) {
             case ACTIONS[0]: // remove
                 showOptionWindow(I18N["delete_ask"]);
 
-                // TODO: bug that it sometimes deletes only part of the selected files
-
-                // Confirmation dialogue
+                // Confirmation dialog
                 const DELETE_QUESTION_P = document.createElement("p");
                 const DELETE_BTN = document.createElement("button");
                 DELETE_QUESTION_P.textContent = I18N["delete_confirmation"];
@@ -56,57 +54,55 @@ export async function executeAction(e) {
                 OPTION_WINDOW_CONTENT.innerHTML = "";
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_QUESTION_P);
                 OPTION_WINDOW_CONTENT.appendChild(DELETE_BTN);
-                await new Promise(resolve => DELETE_BTN.addEventListener("click", resolve, { once: true }));
+                await new Promise(resolve =>
+                    DELETE_BTN.addEventListener("click", resolve, { once: true }));
 
-                let remove_response = await fetch("action_delete.php", {
+                const remove_response = await fetch("action_delete.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
                     },
                     body: requestBody
                 });
-                let remove_response_content = await remove_response.json();
+                const remove_response_content = await remove_response.json();
                 console.log(remove_response_content);
                 renderResponseStatus(remove_response_content);
-
                 break;
 
             case ACTIONS[1]: // move
                 showOptionWindow(I18N["move_ask"]);
                 OPTION_WINDOW_CONTENT.innerHTML = "";
-                let move_destination = await selectDestinationFolder();
+                const move_destination = await selectDestinationFolder();
                 requestBody.append("destination", move_destination.toString());
 
-                let move_response = await fetch("action_move.php", {
+                const move_response = await fetch("action_move.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
                     },
                     body: requestBody
                 });
-                let move_response_content = await move_response.json();
+                const move_response_content = await move_response.json();
                 console.log(move_response_content);
                 renderResponseStatus(move_response_content);
-
                 break;
 
             case ACTIONS[2]: // copy
                 showOptionWindow(I18N["copy_ask"]);
                 OPTION_WINDOW_CONTENT.innerHTML = "";
-                let copy_destination = await selectDestinationFolder();
+                const copy_destination = await selectDestinationFolder();
                 requestBody.append("destination", copy_destination.toString());
 
-                let copy_response = await fetch("action_copy.php", {
+                const copy_response = await fetch("action_copy.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
                     },
                     body: requestBody
                 });
-                let copy_response_content = await copy_response.json();
+                const copy_response_content = await copy_response.json();
                 console.log(copy_response_content);
                 renderResponseStatus(copy_response_content);
-
                 break;
 
             case ACTIONS[3]: // zip
@@ -114,7 +110,6 @@ export async function executeAction(e) {
                 window.open(`action_zip.php?${requestBody}`, "_blank");
                 hideOptionWindow();
                 break;
-
 
             default:
                 showOptionWindow("What happened?");

@@ -1,15 +1,14 @@
 "use strict";
 import {fetchFolderContents, renderResponseStatus} from "../folder.js";
-import {OPTION_WINDOW, OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
+import {OPTION_WINDOW_CONTENT, showOptionWindow} from "./optionWindow.js";
+import {I18N} from "../globals.js";
 
 export async function addFile(destination_folder) {
-    showOptionWindow("Add a file");
+    showOptionWindow(I18N['file_upload']);
 
-    const rawHTMLResponse = await fetch("public/included_html/addFileForm.html", {
+    const rawHTMLResponse = await fetch("public/included_html/addFileForm.php", {
         method: "POST",
-        headers: {
-            "Accept": "text/html"
-        }
+        headers: { "Accept": "text/html" }
     });
 
     OPTION_WINDOW_CONTENT.innerHTML = await rawHTMLResponse.text();
