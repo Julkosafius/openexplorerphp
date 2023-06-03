@@ -3,6 +3,7 @@ require 'app/globals.php';
 require 'app/utilities.php';
 require 'app/ZipFile.php';
 
+global $I18N;
 global $sqlite; // inherits database connection from utilities
 
 function findAllFiles($folder_id, $path = '') {
@@ -26,7 +27,7 @@ function findAllFiles($folder_id, $path = '') {
 
 $files = isset($_GET['files']) ? $_GET['files'] : null;
 $folders = isset($_GET['folders']) ? $_GET['folders'] : null;
-define("PATH_PREAMBLE", 'data' . DIRECTORY_SEPARATOR . $_COOKIE['user_id'] . DIRECTORY_SEPARATOR);
+define("PATH_PREAMBLE", 'data'.DIRECTORY_SEPARATOR.$_COOKIE['user_id'].DIRECTORY_SEPARATOR);
 
 $file_paths = [];
 $added_sth = false;
@@ -34,10 +35,10 @@ $added_sth = false;
 if (!empty($folders)) {
     foreach ($folders as $folder_id) {
         if (!isIdValid($folder_id, 'folders')) {
-            echo 'One or more of the folders to be zipped do not exist.';
+            echo $I18N['zip_fail'].': '.$I18N['zip_fail_folder_not_found'];
             die();
         } elseif (!isPropertyOfUser($folder_id, 'folders')) {
-            echo 'One or more of the folders to be zipped does not belong to you.';
+            echo $I18N['zip_fail'].': '.$I18N['error_no_permission'];
             die();
         }
         $folder_info = getInfo($folder_id, 'folders');
@@ -51,10 +52,10 @@ $zip = new ZipFile();
 if (!empty($file_paths)) {
     foreach ($file_paths as $file_id => $file_info) {
         if (!isIdValid($file_id, 'files')) {
-            echo 'One or more of the files from a subfolder to be zipped do not exist.';
+            echo $I18N['zip_fail'].': '.$I18N['zip_fail_file_sub_not_found'];
             die();
         } elseif (!isPropertyOfUser($file_id, 'files')) {
-            echo 'One or more of the files to be zipped does not belong to you.';
+            echo $I18N['zip_fail'].': '.$I18N['error_no_permission'];
             die();
         }
         $zip_path = $file_info['zip_path'];
@@ -62,7 +63,7 @@ if (!empty($file_paths)) {
         $file_hash = $file_info['file_hash'];
         $system_path = PATH_PREAMBLE.$file_hash.'.'.$file_type;
         if (!file_exists($system_path)) {
-            echo $zip_path.' does not exist anymore.';
+            echo $I18N['zip_fail'].': '.$zip_path.' – '.$I18N['error_not_found'];
             die();
         }
         $zip->addFile(file_get_contents($system_path), $zip_path);
@@ -74,10 +75,10 @@ if (!empty($file_paths)) {
 if (!empty($files)) {
     foreach ($files as $file_id) {
         if (!isIdValid($file_id, 'files')) {
-            echo 'One or more of the files to be zipped do not exist.';
+            echo $I18N['zip_fail'].': '.$I18N['zip_fail_file_not_found'];
             die();
         } elseif (!isPropertyOfUser($file_id, 'files')) {
-            echo 'One or more of the files to be zipped does not belong to you.';
+            echo $I18N['zip_fail'].': '.$I18N['error_no_permission'];
             die();
         }
         $file_info = getInfo($file_id, 'files');
@@ -86,7 +87,7 @@ if (!empty($files)) {
         $file_hash = $file_info['file_hash'];
         $system_path = PATH_PREAMBLE.$file_hash.'.'.$file_type;
         if (!file_exists($system_path)) {
-            echo $file_name.'.'.$file_type.' does not exist anymore.';
+            echo $I18N['zip_fail'].': '.$file_name.'.'.$file_type.' – '.$I18N['error_not_found'];
             die();
         }
         $zip->addFile(file_get_contents($system_path), $file_name.'.'.$file_type);
@@ -95,12 +96,12 @@ if (!empty($files)) {
 }
 
 if ($added_sth) {
-    header("Content-type: application/octet-stream");
-    header("Content-Disposition: attachment; filename=download.zip");
-    header("Content-Description: Files of an applicant");
+    header('Content-type: application/octet-stream');
+    header('Content-Disposition: attachment; filename=download.zip');
+    header('Content-Description: Files of an applicant');
 
 // get the zip content and send it back to the browser
     echo $zip->file();
 } else {
-    echo 'No files given.';
+    echo $I18N['zip_fail'].': '.$I18N['zip_fail_no_file'];
 }

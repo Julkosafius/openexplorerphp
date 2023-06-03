@@ -37,24 +37,22 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
 
     <div id="wrapper">
         <header>
+            <section>
+                <button id="addFileBtn"><?= $I18N['file_upload'] ?></button>
+                <button id="addFolderBtn"><?= $I18N['folder_create'] ?></button>
 
-
-            <button id="addFileBtn"><?= ucfirst($I18N['file_upload']) ?></button>
-            <button id="addFolderBtn"><?= ucfirst($I18N['folder_create']) ?></button>
-
-            <form id="elementActionForm" method="post">
-                <label for="elementAction" class="visually-hidden"><?= ucfirst($I18N['action_on_element']) ?></label>
-                <select name="elementAction" id="elementAction" required="required" disabled="disabled">
-                    <option value=""></option>
-                    <option value="rm"><?= ucfirst($I18N['delete']) ?></option>
-                    <option value="mv"><?= ucfirst($I18N['move']) ?></option>
-                    <option value="cp"><?= ucfirst($I18N['copy']) ?></option>
-                    <option value="zip"><?= ucfirst($I18N['zip']) ?></option>
-                </select>
-                <button id="elementActionBtn" disabled="disabled"><?= ucfirst($I18N['go']) ?>!</button>
-            </form>
-
-            <button id="settingsBtn"><?= $I18N['settings'] ?></button>
+                <form id="elementActionForm" method="post">
+                    <label for="elementAction" class="visually-hidden"><?= $I18N['action_on_element'] ?></label>
+                    <select name="elementAction" id="elementAction" required="required" disabled="disabled">
+                        <option value=""></option>
+                        <option value="rm"><?= $I18N['delete'] ?></option>
+                        <option value="mv"><?= $I18N['move'] ?></option>
+                        <option value="cp"><?= $I18N['copy'] ?></option>
+                        <option value="zip"><?= $I18N['zip'] ?></option>
+                    </select>
+                    <button id="elementActionBtn" disabled="disabled"><?= ucfirst($I18N['go']) ?>!</button>
+                </form>
+            </section>
         </header>
 
         <nav>
@@ -69,11 +67,15 @@ setcookie('folder_id', $sqlite->getFirstColumnValue('select rowid as rid from fo
                 <button id="sortBySizeBtn"><?= ucfirst($I18N['size']) ?> &uarr;</button>
             </div>
 
-
+            <noscript><?= $I18N['noscript'] ?></noscript>
             <div id="elementView">
 
             </div>
         </main>
+        <footer>
+            <button id="settingsBtn"><?= $I18N['settings'] ?></button>
+            <span>–&nbsp;OpenExplorerPHP&nbsp;<?= date('Y') ?></span>
+        </footer>
 
     </div>
 

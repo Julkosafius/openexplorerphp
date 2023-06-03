@@ -60,6 +60,7 @@
     "name": "Name",
     "nodate": "Kein Datum verfügbar",
     "noname": "Kein Name verfügbar",
+    "noscript": "Im Browser muss JavaScript aktiviert sein, um diese Seite zu nutzen.",
     "nosize": "Keine Größe verfügbar",
     "password": "Passwort",
     "password_nomatch": "Passwörter stimmen nicht überein",
@@ -82,10 +83,14 @@
     "username_or_password_wrong": "Nutzername oder Passwort falsch",
     "username_taken": "Nutzername schon vergeben",
     "username_too_short": "Nutzername ist zu kurz",
-    "zip": "Herunterladen"
+    "zip": "Herunterladen",
+    "zip_fail": "Nicht gezippt",
+    "zip_fail_file_not_found": "eine oder mehrere Dateien nicht gefunden.",
+    "zip_fail_file_sub_not_found": "eine oder mehrere Dateien aus einem Unterordner nicht gefunden.",
+    "zip_fail_folder_not_found": "eine oder mehrere Ordner nicht gefunden.",
+    "zip_fail_no_file": "keine Dateien übermittelt"
   },
   "en_US": {
-
     "action_on_element": "action on selected element",
     "copy": "Copy",
     "copy_ask": "Copy to where?",
@@ -103,7 +108,7 @@
     "error_name_too_long": "Name is too long",
     "error_no_destination": "no destination folder found",
     "error_no_permission": "no permission",
-    "error_not_found": "Not found",
+    "error_not_found": "not found",
     "error_unknown": "unknown error",
     "file_drop": "Drop files here",
     "file_sizes": [
@@ -129,7 +134,7 @@
     "file_upload_fail_too_large": "too large, max. file size is ",
     "file_upload_fail_too_large_folder": "file too large for this folder",
     "file_upload_ok": "Uploaded",
-    "folder_create": "create folder",
+    "folder_create": "Create folder",
     "folder_create_fail": "Could not create folder",
     "folder_create_ok": "Folder has been created successfully",
     "folder_select": "Select folder",
@@ -146,6 +151,7 @@
     "name": "Name",
     "nodate": "No date available",
     "noname": "No name available",
+    "noscript": "Please activate JavaScript in your browser.",
     "nosize": "No size available",
     "password": "Password",
     "password_nomatch": "Passwords do not match",
@@ -168,7 +174,12 @@
     "username_or_password_wrong": "Username or password wrong",
     "username_taken": "username is already taken",
     "username_too_short": "Username is too short",
-    "zip": "Download"
+    "zip": "Download",
+    "zip_fail": "Unable to zip",
+    "zip_fail_file_not_found": "one or more files not found.",
+    "zip_fail_file_sub_not_found": "one or more files from a sub-folder were not found.",
+    "zip_fail_folder_not_found": "one or more folders not found.",
+    "zip_fail_no_file": "no files given"
   },
   "fr_FR": {
     "action_on_element": "Action sur les éléments sélectionnés",
@@ -204,7 +215,7 @@
       "Ro",
       "Qo"
     ],
-    "file_upload": "télécharger un fichier",
+    "file_upload": "Télécharger un fichier",
     "file_upload_fail": "Inapable de télécharger",
     "file_upload_fail_bad_type": "type de fichier non autorisé",
     "file_upload_fail_empty": "fichier vide téléchargé",
@@ -231,6 +242,7 @@
     "name": "Nom",
     "nodate": "Date indisponible",
     "noname": "Nom indisponible",
+    "noscript": "Veuillez activer JavaScript dans votre navigateur.",
     "nosize": "Taille indisponible",
     "password": "Mot de passe",
     "password_nomatch": "Les mots de passe ne correspondent pas",
@@ -253,6 +265,11 @@
     "username_or_password_wrong": "Nom d'utilisateur ou mot de passe incorrect",
     "username_taken": "Nom d'utilisateur indisponible",
     "username_too_short": "Le nom d'utilisateur est trop court",
-    "zip": "Télécharger"
+    "zip": "Télécharger",
+    "zip_fail": "Incapable de créer un fichier ZIP",
+    "zip_fail_file_not_found": "un ou plusieurs dossiers introuvables.",
+    "zip_fail_file_sub_not_found": "un ou plusieurs fichiers d'un sous-dossier introuvables.",
+    "zip_fail_folder_not_found": "un ou plusieurs dossiers introuvables.",
+    "zip_fail_no_file": "aucun fichier n'est donné"
   }
 }

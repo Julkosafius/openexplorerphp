@@ -18,6 +18,7 @@ export async function addFile(destination_folder) {
     const FILE_UPLOAD_INPUT = document.getElementById("fileuploadInput");
     FILE_UPLOAD_BTN.addEventListener("click", async (e) => {
         e.preventDefault();
+        if (!FILE_UPLOAD_INPUT.files.length) return;
 
         let status_array = [];
         const PROGRESS_BAR = document.createElement("progress");
