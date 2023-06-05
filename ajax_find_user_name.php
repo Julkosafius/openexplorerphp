@@ -1,11 +1,12 @@
 <?php
 require 'vendor/autoload.php';
-require 'app/globals.php';
+require 'src/utilities.php';
+require 'src/globals.php';
 
 global $I18N;
 
-use App\SQLiteConnection as SQLiteConnection;
-use App\SQLiteUtilities as SQLiteUtilities;
+use src\SQLiteConnection as SQLiteConnection;
+use src\SQLiteUtilities as SQLiteUtilities;
 
 // get the q parameter from URL
 $q = $_REQUEST['q'];

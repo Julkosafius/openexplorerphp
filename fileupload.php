@@ -1,11 +1,16 @@
 <?php
-require 'app/globals.php';
-require 'app/utilities.php';
+require 'src/globals.php';
+require 'src/utilities.php';
 
 // imports default timezone from utilities
 global $I18N;
 global $allowed_file_types;
 global $sqlite;
+
+if (!table_exists('files')) {
+    echo $I18N['error_database'];
+    die();
+}
 
 $file = $_FILES['file'];
 

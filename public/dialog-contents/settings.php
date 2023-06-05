@@ -1,5 +1,5 @@
 <?php
-require '../../app/globals.php';
+require '../../src/globals.php';
 global $i18n_json, $usedLocale, $I18N;
 ?>
 <form method="dialog">

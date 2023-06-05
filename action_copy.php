@@ -1,6 +1,7 @@
 <?php
-require 'app/globals.php';
-require 'app/utilities.php';
+require 'src/globals.php';
+require 'src/utilities.php';
+
 
 global $sqlite; // inherits database connection from utilities
 global $I18N;

@@ -1,8 +1,8 @@
 <?php
-require '../../app/globals.php';
+require '../../src/globals.php';
 global $I18N;
 ?>
-<form method="" enctype="multipart/form-data">
+<form method="dialog" enctype="multipart/form-data">
     <label for="fileuploadInput" class="drop-container">
         <span><?= $I18N['file_drop'] ?></span>
         –

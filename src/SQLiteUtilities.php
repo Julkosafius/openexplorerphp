@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace src;
 
 date_default_timezone_set('UTC');
 

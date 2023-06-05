@@ -1,10 +1,10 @@
 <?php
 
-use App\SQLiteConnection;
-use App\SQLiteUtilities;
+use src\SQLiteConnection;
+use src\SQLiteUtilities;
 
-require 'app/globals.php';
-require 'app/utilities.php';
+require 'src/globals.php';
+require 'src/utilities.php';
 
 global $sqlite, $I18N;
 

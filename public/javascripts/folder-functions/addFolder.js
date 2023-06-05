@@ -7,7 +7,7 @@ export async function addFolder(destination_folder) {
     showOptionWindow(I18N['folder_create']);
 
     // get text input from
-    const rawResponse = await fetch("public/included_html/addFolderForm.php", {
+    const rawResponse = await fetch("public/dialog-contents/addFolderForm.php", {
         method: "POST",
         headers: {
             "Accept": "text/html"

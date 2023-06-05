@@ -1,10 +1,15 @@
 <?php
-require 'app/globals.php';
-require 'app/utilities.php';
+require 'src/globals.php';
+require 'src/utilities.php';
 
 // imports default timezone from utilities
 global $I18N;
 global $sqlite;
+
+if (!table_exists('folders')) {
+    echo $I18N['error_database'];
+    die();
+}
 
 // get name of the folder being created
 $folder_name = $_POST['folder_name'];
@@ -22,4 +27,4 @@ $sqlite->executeCommands('insert into folders(user_id, folder_name, parent_folde
 // check if folder was created successfully
 $folderExists = $sqlite->getFirstColumnValue('select count(*) as cnt from folders where user_id like "'.$_COOKIE['user_id'].'" and folder_name like "'.$folder_name.'" and parent_folder_id like "'.$folder_id.'" and folder_time like "'.$folder_time.'"', 'cnt');
 
-echo $folderExists > 0 ? $I18N['folder_create_ok'] : $I18N['folder_create_fail'];
+echo $folderExists > 0 ? $folder_name.' '.$I18N['folder_create_ok'] : $I18N['folder_create_fail'];

@@ -1,10 +1,13 @@
 <?php
 date_default_timezone_set('UTC');
 
-require 'vendor/autoload.php';
+require 'SQLiteConnection.php';
+require 'SQLiteUtilities.php';
 
-use App\SQLiteConnection as SQLiteConnection;
-use App\SQLiteUtilities as SQLiteUtilities;
+require 'vendor\autoload.php';
+
+use src\SQLiteConnection as SQLiteConnection;
+use src\SQLiteUtilities as SQLiteUtilities;
 
 $sqlite = new SQLiteUtilities((new SQLiteConnection())->connect());
 
@@ -22,6 +25,11 @@ if (!function_exists('str_contains')) {
     function str_contains($haystack, $needle) {
         return $needle !== '' && mb_strpos($haystack, $needle) !== false;
     }
+}
+
+function table_exists($table_name) {
+    global $sqlite;
+    return "" != $sqlite->getFirstColumnValue('SELECT name FROM sqlite_master WHERE type="table" AND name="'.$table_name.'"', 'name');
 }
 
 function generateLoginInfo() {

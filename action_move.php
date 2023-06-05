@@ -5,8 +5,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath( $_SER
     die();
 }
 
-require 'app/globals.php';
-require 'app/utilities.php';
+require 'src/globals.php';
+require 'src/utilities.php';
 
 global $I18N;
 global $sqlite; // inherits database connection from utilities

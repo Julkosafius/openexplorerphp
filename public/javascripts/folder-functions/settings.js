@@ -6,7 +6,7 @@ import {I18N} from "../globals.js";
 export async function manageSettings() {
     showOptionWindow(I18N["settings"]);
 
-    const rawHTMLResponse = await fetch("public/included_html/settings.php", {
+    const rawHTMLResponse = await fetch("public/dialog-contents/settings.php", {
         method: "POST",
         headers: { "Accept": "text/html" }
     });

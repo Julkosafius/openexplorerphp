@@ -1,13 +1,26 @@
 <?php
-require 'app/globals.php';
-require 'app/utilities.php';
-require 'app/ZipFile.php';
+require 'src/globals.php';
+require 'src/utilities.php';
+require 'src/ZipFile.php';
 
 global $I18N;
 global $sqlite; // inherits database connection from utilities
 
+function changesFilenameIfMultiple($file_name_w_path) {
+    // append an incrementing number if files with same name exist under same path
+    global $file_names_count;
+
+    $new_file_name_w_path = $file_name_w_path;
+    if (array_key_exists($file_name_w_path, $file_names_count)) {
+        $new_file_name_w_path .= '-'.++$file_names_count[$file_name_w_path];
+    } else {
+        $file_names_count[$file_name_w_path] = 0;
+    }
+    return $new_file_name_w_path;
+}
+
 function findAllFiles($folder_id, $path = '') {
-    global $file_paths;
+    global $file_subfolder_paths, $file_names_count;
     $folder_contents = getFolderContents($folder_id);
     $elements = array_merge($folder_contents['folders'], $folder_contents['files']);
     if (!empty($elements)) {
@@ -15,8 +28,9 @@ function findAllFiles($folder_id, $path = '') {
             if (isset($elements[$i]['folder_id'])) {
                 findAllFiles($elements[$i]['folder_id'], $path.$elements[$i]['folder_name'].DIRECTORY_SEPARATOR);
             } else {
-                $file_paths[$elements[$i]['file_id']] = [
-                    'zip_path' => $path.$elements[$i]['file_name'].'.'.$elements[$i]['file_type'],
+                $file_subfolder_paths[$elements[$i]['file_id']] = [
+                    'zip_path' => changesFilenameIfMultiple($path.$elements[$i]['file_name'])
+                        .'.'.$elements[$i]['file_type'],
                     'file_type' => $elements[$i]['file_type'],
                     'file_hash' => $elements[$i]['file_hash']
                 ];
@@ -29,7 +43,8 @@ $files = isset($_GET['files']) ? $_GET['files'] : null;
 $folders = isset($_GET['folders']) ? $_GET['folders'] : null;
 define("PATH_PREAMBLE", 'data'.DIRECTORY_SEPARATOR.$_COOKIE['user_id'].DIRECTORY_SEPARATOR);
 
-$file_paths = [];
+$file_names_count = [];
+$file_subfolder_paths = [];
 $added_sth = false;
 
 if (!empty($folders)) {
@@ -48,9 +63,9 @@ if (!empty($folders)) {
 
 $zip = new ZipFile();
 
-// add all files from subfolders (and create them in the process)
-if (!empty($file_paths)) {
-    foreach ($file_paths as $file_id => $file_info) {
+// add all files from sub-folders (and create them in the process)
+if (!empty($file_subfolder_paths)) {
+    foreach ($file_subfolder_paths as $file_id => $file_info) {
         if (!isIdValid($file_id, 'files')) {
             echo $I18N['zip_fail'].': '.$I18N['zip_fail_file_sub_not_found'];
             die();
@@ -90,7 +105,7 @@ if (!empty($files)) {
             echo $I18N['zip_fail'].': '.$file_name.'.'.$file_type.' – '.$I18N['error_not_found'];
             die();
         }
-        $zip->addFile(file_get_contents($system_path), $file_name.'.'.$file_type);
+        $zip->addFile(file_get_contents($system_path), changesFilenameIfMultiple($file_name).'.'.$file_type);
         $added_sth = true;
     }
 }

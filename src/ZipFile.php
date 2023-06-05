@@ -77,7 +77,6 @@ class ZipFile {
             | ($timearray['seconds'] >> 1);
     }
 
-
     /**
      * Adds "file" to archive.
      * @param string  $data file contents

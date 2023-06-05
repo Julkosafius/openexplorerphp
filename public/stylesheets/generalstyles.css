@@ -65,6 +65,13 @@ input[type=file]::file-selector-button:hover {
     background-color: var(--highlight);
 }
 
+fieldset {
+    border-radius: var(--border-radius);
+}
+fieldset select {
+    width: 100%;
+}
+
 input[type=checkbox]:enabled {
     cursor: pointer;
 }
@@ -76,11 +83,8 @@ input[type=password] {
     font-family: inherit;
 }
 
-fieldset {
-    border-radius: var(--border-radius);
-}
-fieldset select {
-    width: 100%;
+label {
+    margin-top: calc(var(--font-size) / 2);
 }
 
 noscript {
@@ -347,6 +351,9 @@ dialog:has(form) #optionWindowContent > form {
 
 /* Folder selection tree */
 
+dialog {
+    max-width: 80%;
+}
 dialog:has(#treeView) {
     height: 40vh;
     height: 40dvh;
@@ -379,9 +386,9 @@ dialog:has(#treeView) #optionWindowContent {
     background-color: var(--highlight);
 }
 
-/**************/
-/* login_form */
-/**************/
+/***********************/
+/* register/login_form */
+/***********************/
 
 #register_form,
 #login_form {

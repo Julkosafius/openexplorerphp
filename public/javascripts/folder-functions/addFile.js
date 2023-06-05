@@ -6,7 +6,7 @@ import {I18N} from "../globals.js";
 export async function addFile(destination_folder) {
     showOptionWindow(I18N['file_upload']);
 
-    const rawHTMLResponse = await fetch("public/included_html/addFileForm.php", {
+    const rawHTMLResponse = await fetch("public/dialog-contents/addFileForm.php", {
         method: "POST",
         headers: { "Accept": "text/html" }
     });
