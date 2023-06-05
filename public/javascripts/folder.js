@@ -12,7 +12,7 @@ import {last_sort_direction, last_sort_property, sortByProperty} from "./folder-
 import {executeAction} from "./folder-functions/executeAction.js";
 import {manageSettings} from "./folder-functions/settings.js";
 
-const DEBUG = true;
+const DEBUG = false;
 if (!DEBUG) {
     if (!window.console) window.console = {};
     let methods = ["log", "debug", "warn", "info"];

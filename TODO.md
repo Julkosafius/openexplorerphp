@@ -1,3 +1,6 @@
+- Features:
+  - User account menu - they can change their name or delete their account and files
+
 - Accessibility:
   - generate labels for all checkboxes in renderFolderContents() in folder.js
 
